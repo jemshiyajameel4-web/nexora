@@ -1780,17 +1780,15 @@ function initHolaOverviewAnimation() {
   let isAnimating = false;
   let isPinnedActive = false;
 
-  // Set pristine initial visual state
   function resetAll() {
     gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
     gsap.set([t2, t3, t4], { opacity: 0, y: 30, scale: 0.96, pointerEvents: 'none' });
-    gsap.set([p1, p3], { opacity: 0, x: -120, scale: 0.94, pointerEvents: 'none' });
-    gsap.set([p2, p4], { opacity: 0, x: 120, scale: 0.94, pointerEvents: 'none' });
+    gsap.set([p1, p3], { opacity: 0, x: -70, scale: 0.94, pointerEvents: 'none' });
+    gsap.set([p2, p4], { opacity: 0, x: 70, scale: 0.94, pointerEvents: 'none' });
   }
 
   resetAll();
 
-  // Discrete Stage Transition Function
   function goToStage(targetStage, isInstant = false) {
     if (targetStage === currentStage && !isInstant) return;
     if (targetStage < 0 || targetStage > 4) return;
@@ -1798,7 +1796,7 @@ function initHolaOverviewAnimation() {
     isAnimating = true;
     currentStage = targetStage;
 
-    const animDuration = isInstant ? 0 : 0.55;
+    const animDuration = isInstant ? 0 : 0.5;
     const tl = gsap.timeline({
       onComplete: () => {
         isAnimating = false;
@@ -1806,34 +1804,29 @@ function initHolaOverviewAnimation() {
     });
 
     if (targetStage === 0) {
-      // Stage 0: Show ONLY Text 1. All photos hidden.
       tl.to([t2, t3, t4], { opacity: 0, y: 30, duration: animDuration * 0.7, ease: 'power2.in' }, 0)
         .to(photos, { opacity: 0, scale: 0.94, duration: animDuration * 0.7, ease: 'power2.in' }, 0)
         .to(t1, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out' }, 0.1);
 
     } else if (targetStage === 1) {
-      // Stage 1: Text 1 stays visible + Photo 1 (Top-Left) enters
       tl.to([t2, t3, t4], { opacity: 0, duration: animDuration * 0.5 }, 0)
         .to([p2, p3, p4], { opacity: 0, duration: animDuration * 0.5 }, 0)
         .to(t1, { opacity: 1, y: 0, scale: 1, duration: animDuration * 0.8 }, 0)
         .to(p1, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.05);
 
     } else if (targetStage === 2) {
-      // Stage 2: Text 1 & Photo 1 exit -> Text 2 + Photo 2 (Bottom-Right) enter
       tl.to([t1, p1], { opacity: 0, y: -25, x: -70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
         .to([t3, t4, p3, p4], { opacity: 0, duration: animDuration * 0.4 }, 0)
         .to(t2, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
         .to(p2, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.2);
 
     } else if (targetStage === 3) {
-      // Stage 3: Text 2 & Photo 2 exit -> Text 3 + Photo 3 (Top-Left) enter
       tl.to([t2, p2], { opacity: 0, y: -25, x: 70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
         .to([t1, t4, p1, p4], { opacity: 0, duration: animDuration * 0.4 }, 0)
         .to(t3, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
         .to(p3, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.2);
 
     } else if (targetStage === 4) {
-      // Stage 4: Text 3 & Photo 3 exit -> Text 4 + Photo 4 (Bottom-Right) enter
       tl.to([t3, p3], { opacity: 0, y: -25, x: -70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
         .to([t1, t2, p1, p2], { opacity: 0, duration: animDuration * 0.4 }, 0)
         .to(t4, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
@@ -1841,11 +1834,10 @@ function initHolaOverviewAnimation() {
     }
   }
 
-  // Master Pinning ScrollTrigger
   const pinTrigger = ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: '+=2800',
+    end: '+=2400',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
@@ -1865,7 +1857,7 @@ function initHolaOverviewAnimation() {
     }
   });
 
-  // Wheel Gesture Discrete Controller
+  // Wheel Gesture Discrete Controller (Desktop)
   window.addEventListener('wheel', (e) => {
     if (!isPinnedActive) return;
 
@@ -1873,7 +1865,6 @@ function initHolaOverviewAnimation() {
     if (Math.abs(delta) < 18) return;
 
     if (delta > 0) {
-      // Scrolling DOWN
       if (isAnimating) {
         e.preventDefault();
         return;
@@ -1882,11 +1873,9 @@ function initHolaOverviewAnimation() {
         e.preventDefault();
         goToStage(currentStage + 1);
       } else {
-        // At final stage, release pin and smoothly proceed
         isPinnedActive = false;
       }
     } else {
-      // Scrolling UP
       if (isAnimating) {
         e.preventDefault();
         return;
@@ -1895,13 +1884,12 @@ function initHolaOverviewAnimation() {
         e.preventDefault();
         goToStage(currentStage - 1);
       } else {
-        // At initial stage, release pin and scroll up
         isPinnedActive = false;
       }
     }
   }, { passive: false });
 
-  // Touch Gesture Discrete Controller for Mobile & Tablet
+  // Touch Gesture Discrete Controller (Mobile & Tablet)
   let touchStartY = 0;
   let touchStartX = 0;
 
@@ -1920,29 +1908,20 @@ function initHolaOverviewAnimation() {
     const deltaY = touchStartY - currentY;
     const deltaX = touchStartX - currentX;
 
-    // Ensure predominantly vertical swipe
-    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 28) {
+    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 20) {
       if (deltaY > 0) {
-        // Swipe UP (Advance to next stage)
-        if (isAnimating) {
-          if (e.cancelable) e.preventDefault();
-          return;
-        }
+        // Swipe UP -> advance stage
+        if (isAnimating) return;
         if (currentStage < 4) {
-          if (e.cancelable) e.preventDefault();
           touchStartY = currentY;
           goToStage(currentStage + 1);
         } else {
           isPinnedActive = false;
         }
       } else {
-        // Swipe DOWN (Return to previous stage)
-        if (isAnimating) {
-          if (e.cancelable) e.preventDefault();
-          return;
-        }
+        // Swipe DOWN -> previous stage
+        if (isAnimating) return;
         if (currentStage > 0) {
-          if (e.cancelable) e.preventDefault();
           touchStartY = currentY;
           goToStage(currentStage - 1);
         } else {
@@ -1950,9 +1929,9 @@ function initHolaOverviewAnimation() {
         }
       }
     }
-  }, { passive: false });
+  }, { passive: true });
 
-  // Mouse Parallax on currently active floating photo
+  // Mouse Parallax on desktop
   section.addEventListener('mousemove', (e) => {
     const rect = section.getBoundingClientRect();
     const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
