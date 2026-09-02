@@ -143,14 +143,6 @@ const PHOTO_WAVE_ITEMS = [
     category: 'Glass Manifestation',
     location: 'Infopark, Kakkanad',
     desc: 'Architectural privacy frosted manifestation films with precision etched linear geometry and bronze hardware.'
-  },
-  {
-    id: 'wave-18',
-    src: 'assets/images/nexora-service-outdoor-media.jpg',
-    title: 'Skyline Unipole — Architectural Roadside Illumination',
-    category: 'Outdoor Advertising',
-    location: 'NH 66 / Bypass, Ernakulam',
-    desc: 'High-impact cantilevered structural steel advertising monolith with precision warm LED beam floodlights at dusk.'
   }
 ];
 

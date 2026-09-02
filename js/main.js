@@ -327,20 +327,7 @@ const PROJECTS_DATA = [
     description: 'Architectural privacy frosted glass manifestation films featuring refined linear geometric line patterns, bronze door handles, and warm interior lighting.',
     highlights: ['Frosted Dusted Crystal Vinyl', 'Precision Plotter-Cut Linear Geometry', 'Contemporary Executive Privacy Solution']
   },
-  {
-    id: 'skyline-unipole-billboard',
-    title: 'Skyline Unipole — Architectural Roadside Media',
-    category: 'outdoor-advertising',
-    categoryName: 'Outdoor Media',
-    client: 'Skyline Luxury Properties',
-    location: 'NH 66 Bypass, Ernakulam',
-    year: '2026',
-    image: 'assets/images/nexora-service-outdoor-media.jpg',
-    featured: false,
-    wide: false,
-    description: 'Cantilevered architectural structural steel advertising unipole with high-output IP66 beam floodlighting for supreme night-time visibility on main transit corridors.',
-    highlights: ['Cantilevered Steel Unipole Structure', 'Uniform High-Intensity LED Beam Lighting', 'Heavy-Duty Monsoon Resilient Engineering']
-  },
+
   {
     id: 'saaveri-reception-counter',
     title: 'Saaveri — Architectural Reception Desk',
@@ -1304,15 +1291,17 @@ function initLogo3DShowcaseAnimation() {
         applyStep(currentStep);
       }
     },
-    snap: {
-      snapTo: [0, 0.25, 0.5, 0.75, 1.0],
-      duration: { min: 0.3, max: 0.6 },
-      ease: 'power2.inOut',
-      delay: 0.02
-    }
+    ...( ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? {} : {
+      snap: {
+        snapTo: [0, 0.25, 0.5, 0.75, 1.0],
+        duration: { min: 0.3, max: 0.6 },
+        ease: 'power2.inOut',
+        delay: 0.02
+      }
+    })
   });
 
-  // Step Gesture Handler (Ensures 1 scroll gesture = exactly 1 stage, prevents skipping)
+  // Wheel Gesture Handler for desktop discrete navigation
   let lastGestureTime = 0;
   function handleScrollGesture(deltaY) {
     if (!stepTrigger.isActive) return;
@@ -1344,30 +1333,16 @@ function initLogo3DShowcaseAnimation() {
     }
   }
 
-  window.addEventListener('wheel', (e) => {
-    if (stepTrigger.isActive) {
-      if ((e.deltaY > 0 && currentStep < 4) || (e.deltaY < 0 && currentStep > 0)) {
-        handleScrollGesture(e.deltaY);
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (!isTouchDevice) {
+    window.addEventListener('wheel', (e) => {
+      if (stepTrigger.isActive) {
+        if ((e.deltaY > 0 && currentStep < 4) || (e.deltaY < 0 && currentStep > 0)) {
+          handleScrollGesture(e.deltaY);
+        }
       }
-    }
-  }, { passive: true });
-
-  let touchStartY = 0;
-  window.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches[0]) {
-      touchStartY = e.touches[0].clientY;
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (stepTrigger.isActive && e.touches && e.touches[0]) {
-      const touchDiff = touchStartY - e.touches[0].clientY;
-      if (Math.abs(touchDiff) > 28) {
-        handleScrollGesture(touchDiff);
-        touchStartY = e.touches[0].clientY;
-      }
-    }
-  }, { passive: true });
+    }, { passive: true });
+  }
 
   // 2. High-Performance Gyroscopic 3D Tilt via gsap.quickTo
   const qCoreRotX = gsap.quickTo(core, 'rotationX', { duration: 0.6, ease: 'power3.out' });
@@ -1776,177 +1751,115 @@ function initHolaOverviewAnimation() {
   const texts = [t1, t2, t3, t4];
   const photos = [p1, p2, p3, p4];
 
-  let currentStage = 0; // 0, 1, 2, 3, 4
-  let isAnimating = false;
-  let isPinnedActive = false;
+  let currentStage = -1;
 
   function resetAll() {
     gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
-    gsap.set([t2, t3, t4], { opacity: 0, y: 30, scale: 0.96, pointerEvents: 'none' });
-    gsap.set([p1, p3], { opacity: 0, x: -70, scale: 0.94, pointerEvents: 'none' });
-    gsap.set([p2, p4], { opacity: 0, x: 70, scale: 0.94, pointerEvents: 'none' });
+    gsap.set([t2, t3, t4], { opacity: 0, y: 25, scale: 0.96, pointerEvents: 'none' });
+    gsap.set(p1, { opacity: 1, x: 0, scale: 1, pointerEvents: 'auto' });
+    gsap.set([p2, p3, p4], { opacity: 0, scale: 0.92, pointerEvents: 'none' });
+    currentStage = 0;
   }
 
   resetAll();
 
-  function goToStage(targetStage, isInstant = false) {
-    if (targetStage === currentStage && !isInstant) return;
-    if (targetStage < 0 || targetStage > 4) return;
-
-    isAnimating = true;
+  function goToStage(targetStage) {
+    if (targetStage === currentStage) return;
     currentStage = targetStage;
+    const dur = 0.45;
 
-    const animDuration = isInstant ? 0 : 0.5;
-    const tl = gsap.timeline({
-      onComplete: () => {
-        isAnimating = false;
+    texts.forEach((text, i) => {
+      if (i === targetStage) {
+        gsap.to(text, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: dur,
+          ease: 'power2.out',
+          pointerEvents: 'auto',
+          overwrite: 'auto'
+        });
+      } else {
+        gsap.to(text, {
+          opacity: 0,
+          y: i < targetStage ? -25 : 25,
+          scale: 0.96,
+          duration: dur * 0.7,
+          ease: 'power2.in',
+          pointerEvents: 'none',
+          overwrite: 'auto'
+        });
       }
     });
 
-    if (targetStage === 0) {
-      tl.to([t2, t3, t4], { opacity: 0, y: 30, duration: animDuration * 0.7, ease: 'power2.in' }, 0)
-        .to(photos, { opacity: 0, scale: 0.94, duration: animDuration * 0.7, ease: 'power2.in' }, 0)
-        .to(t1, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out' }, 0.1);
-
-    } else if (targetStage === 1) {
-      tl.to([t2, t3, t4], { opacity: 0, duration: animDuration * 0.5 }, 0)
-        .to([p2, p3, p4], { opacity: 0, duration: animDuration * 0.5 }, 0)
-        .to(t1, { opacity: 1, y: 0, scale: 1, duration: animDuration * 0.8 }, 0)
-        .to(p1, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.05);
-
-    } else if (targetStage === 2) {
-      tl.to([t1, p1], { opacity: 0, y: -25, x: -70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
-        .to([t3, t4, p3, p4], { opacity: 0, duration: animDuration * 0.4 }, 0)
-        .to(t2, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
-        .to(p2, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.2);
-
-    } else if (targetStage === 3) {
-      tl.to([t2, p2], { opacity: 0, y: -25, x: 70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
-        .to([t1, t4, p1, p4], { opacity: 0, duration: animDuration * 0.4 }, 0)
-        .to(t3, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
-        .to(p3, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.2);
-
-    } else if (targetStage === 4) {
-      tl.to([t3, p3], { opacity: 0, y: -25, x: -70, duration: animDuration * 0.6, ease: 'power2.in', pointerEvents: 'none' }, 0)
-        .to([t1, t2, p1, p2], { opacity: 0, duration: animDuration * 0.4 }, 0)
-        .to(t4, { opacity: 1, y: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.15)
-        .to(p4, { opacity: 1, x: 0, scale: 1, duration: animDuration, ease: 'power2.out', pointerEvents: 'auto' }, 0.2);
-    }
+    photos.forEach((photo, i) => {
+      if (i === targetStage) {
+        gsap.to(photo, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: dur,
+          ease: 'power2.out',
+          pointerEvents: 'auto',
+          overwrite: 'auto'
+        });
+      } else {
+        gsap.to(photo, {
+          opacity: 0,
+          scale: 0.92,
+          duration: dur * 0.7,
+          ease: 'power2.in',
+          pointerEvents: 'none',
+          overwrite: 'auto'
+        });
+      }
+    });
   }
 
-  const pinTrigger = ScrollTrigger.create({
+  // Pure ScrollTrigger progress tracking — no touch hijacking or wheel locks!
+  ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: '+=2400',
+    end: '+=2000',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
-    onEnter: () => {
-      isPinnedActive = true;
-      goToStage(0, true);
-    },
-    onEnterBack: () => {
-      isPinnedActive = true;
-      goToStage(4, true);
-    },
-    onLeave: () => {
-      isPinnedActive = false;
-    },
-    onLeaveBack: () => {
-      isPinnedActive = false;
+    onUpdate: (self) => {
+      const p = self.progress;
+      let targetStage = 0;
+      if (p < 0.25) {
+        targetStage = 0;
+      } else if (p >= 0.25 && p < 0.50) {
+        targetStage = 1;
+      } else if (p >= 0.50 && p < 0.75) {
+        targetStage = 2;
+      } else {
+        targetStage = 3;
+      }
+      goToStage(targetStage);
     }
   });
 
-  // Wheel Gesture Discrete Controller (Desktop)
-  window.addEventListener('wheel', (e) => {
-    if (!isPinnedActive) return;
-
-    const delta = e.deltaY;
-    if (Math.abs(delta) < 18) return;
-
-    if (delta > 0) {
-      if (isAnimating) {
-        e.preventDefault();
-        return;
-      }
-      if (currentStage < 4) {
-        e.preventDefault();
-        goToStage(currentStage + 1);
-      } else {
-        isPinnedActive = false;
-      }
-    } else {
-      if (isAnimating) {
-        e.preventDefault();
-        return;
-      }
-      if (currentStage > 0) {
-        e.preventDefault();
-        goToStage(currentStage - 1);
-      } else {
-        isPinnedActive = false;
-      }
-    }
-  }, { passive: false });
-
-  // Touch Gesture Discrete Controller (Mobile & Tablet)
-  let touchStartY = 0;
-  let touchStartX = 0;
-
-  section.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
-    }
-  }, { passive: true });
-
-  section.addEventListener('touchmove', (e) => {
-    if (!isPinnedActive || !e.touches || e.touches.length === 0) return;
-
-    const currentY = e.touches[0].clientY;
-    const currentX = e.touches[0].clientX;
-    const deltaY = touchStartY - currentY;
-    const deltaX = touchStartX - currentX;
-
-    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 20) {
-      if (deltaY > 0) {
-        // Swipe UP -> advance stage
-        if (isAnimating) return;
-        if (currentStage < 4) {
-          touchStartY = currentY;
-          goToStage(currentStage + 1);
-        } else {
-          isPinnedActive = false;
-        }
-      } else {
-        // Swipe DOWN -> previous stage
-        if (isAnimating) return;
-        if (currentStage > 0) {
-          touchStartY = currentY;
-          goToStage(currentStage - 1);
-        } else {
-          isPinnedActive = false;
-        }
-      }
-    }
-  }, { passive: true });
-
   // Mouse Parallax on desktop
-  section.addEventListener('mousemove', (e) => {
-    const rect = section.getBoundingClientRect();
-    const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) {
+    section.addEventListener('mousemove', (e) => {
+      const rect = section.getBoundingClientRect();
+      const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
 
-    [p1, p3].forEach(el => {
-      if (gsap.getProperty(el, 'opacity') > 0.4) {
-        gsap.to(el, { x: relX * 18, y: relY * 14, duration: 0.6, ease: 'power1.out' });
-      }
-    });
+      [p1, p3].forEach(el => {
+        if (gsap.getProperty(el, 'opacity') > 0.4) {
+          gsap.to(el, { x: relX * 18, y: relY * 14, duration: 0.6, ease: 'power1.out' });
+        }
+      });
 
-    [p2, p4].forEach(el => {
-      if (gsap.getProperty(el, 'opacity') > 0.4) {
-        gsap.to(el, { x: -relX * 20, y: -relY * 16, duration: 0.6, ease: 'power1.out' });
-      }
-    });
-  }, { passive: true });
+      [p2, p4].forEach(el => {
+        if (gsap.getProperty(el, 'opacity') > 0.4) {
+          gsap.to(el, { x: -relX * 20, y: -relY * 16, duration: 0.6, ease: 'power1.out' });
+        }
+      });
+    }, { passive: true });
+  }
 }
