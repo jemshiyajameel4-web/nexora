@@ -1266,11 +1266,13 @@ function initLogo3DShowcaseAnimation() {
   // Set initial state (0 = clean empty stage)
   applyStep(0, true);
 
+  const isMobileLogo = window.innerWidth <= 768;
+
   // GSAP ScrollTrigger to firmly pin section and manage discrete 4-step progress
   const stepTrigger = ScrollTrigger.create({
     trigger: pinTrack,
     start: 'top top',
-    end: '+=300%',
+    end: isMobileLogo ? '+=120%' : '+=300%',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
@@ -1756,8 +1758,7 @@ function initHolaOverviewAnimation() {
   function resetAll() {
     gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
     gsap.set([t2, t3, t4], { opacity: 0, y: 25, scale: 0.96, pointerEvents: 'none' });
-    gsap.set(p1, { opacity: 1, x: 0, scale: 1, pointerEvents: 'auto' });
-    gsap.set([p2, p3, p4], { opacity: 0, scale: 0.92, pointerEvents: 'none' });
+    gsap.set(photos, { opacity: 0, scale: 0.92, pointerEvents: 'none' });
     currentStage = 0;
   }
 
@@ -1768,8 +1769,11 @@ function initHolaOverviewAnimation() {
     currentStage = targetStage;
     const dur = 0.45;
 
+    // Active text index: Stage 0 & 1 -> t1 (index 0), Stage 2 -> t2 (1), Stage 3 -> t3 (2), Stage 4 -> t4 (3)
+    const activeTextIndex = targetStage === 0 ? 0 : targetStage - 1;
+
     texts.forEach((text, i) => {
-      if (i === targetStage) {
+      if (i === activeTextIndex) {
         gsap.to(text, {
           opacity: 1,
           y: 0,
@@ -1782,7 +1786,7 @@ function initHolaOverviewAnimation() {
       } else {
         gsap.to(text, {
           opacity: 0,
-          y: i < targetStage ? -25 : 25,
+          y: i < activeTextIndex ? -25 : 25,
           scale: 0.96,
           duration: dur * 0.7,
           ease: 'power2.in',
@@ -1792,8 +1796,11 @@ function initHolaOverviewAnimation() {
       }
     });
 
+    // Active photo index: Stage 0 -> -1 (all hidden), Stage 1 -> p1 (0), Stage 2 -> p2 (1), Stage 3 -> p3 (2), Stage 4 -> p4 (3)
+    const activePhotoIndex = targetStage === 0 ? -1 : targetStage - 1;
+
     photos.forEach((photo, i) => {
-      if (i === targetStage) {
+      if (i === activePhotoIndex) {
         gsap.to(photo, {
           opacity: 1,
           x: 0,
@@ -1817,25 +1824,29 @@ function initHolaOverviewAnimation() {
     });
   }
 
-  // Pure ScrollTrigger progress tracking — no touch hijacking or wheel locks!
+  const isMobileOverview = window.innerWidth <= 768;
+
+  // Pure ScrollTrigger progress tracking mapped across 5 stages (0, 1, 2, 3, 4)
   ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: '+=2000',
+    end: isMobileOverview ? '+=1200' : '+=2200',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
       let targetStage = 0;
-      if (p < 0.25) {
-        targetStage = 0;
-      } else if (p >= 0.25 && p < 0.50) {
-        targetStage = 1;
-      } else if (p >= 0.50 && p < 0.75) {
-        targetStage = 2;
+      if (p < 0.12) {
+        targetStage = 0; // Text 1 only
+      } else if (p >= 0.12 && p < 0.32) {
+        targetStage = 1; // Text 1 + Photo 1
+      } else if (p >= 0.32 && p < 0.55) {
+        targetStage = 2; // Text 2 + Photo 2
+      } else if (p >= 0.55 && p < 0.78) {
+        targetStage = 3; // Text 3 + Photo 3
       } else {
-        targetStage = 3;
+        targetStage = 4; // Text 4 + Photo 4
       }
       goToStage(targetStage);
     }
