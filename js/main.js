@@ -1773,9 +1773,9 @@ function initHolaOverviewAnimation() {
   function resetAll() {
     gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
     gsap.set([t2, t3, t4], { opacity: 0, y: 25, scale: 0.96, pointerEvents: 'none' });
-    gsap.set(p1, { opacity: 1, scale: 1, pointerEvents: 'auto' });
-    gsap.set([p2, p3, p4], { opacity: 0, scale: 0.92, pointerEvents: 'none' });
-    currentStage = 0;
+    gsap.set([p1, p3], { opacity: 0, x: -30, scale: 0.94, pointerEvents: 'none' });
+    gsap.set([p2, p4], { opacity: 0, x: 30, scale: 0.94, pointerEvents: 'none' });
+    currentStage = 1;
   }
 
   resetAll();
@@ -1783,10 +1783,11 @@ function initHolaOverviewAnimation() {
   function goToStage(targetStage) {
     if (targetStage === currentStage) return;
     currentStage = targetStage;
-    const dur = 0.45;
+    const dur = 0.5;
 
-    // Active text index: Stage 0 & 1 -> t1 (index 0), Stage 2 -> t2 (1), Stage 3 -> t3 (2), Stage 4 -> t4 (3)
-    const activeTextIndex = targetStage === 0 ? 0 : targetStage - 1;
+    // Active text index:
+    // Stage 1 & 2 -> t1 (0), Stage 3 & 4 -> t2 (1), Stage 5 & 6 -> t3 (2), Stage 7 & 8 -> t4 (3)
+    const activeTextIndex = Math.floor((targetStage - 1) / 2);
 
     texts.forEach((text, i) => {
       if (i === activeTextIndex) {
@@ -1812,10 +1813,13 @@ function initHolaOverviewAnimation() {
       }
     });
 
-    // Active photo index: Stage 0 -> p1 (0), Stage 1 -> p1 (0), Stage 2 -> p2 (1), Stage 3 -> p3 (2), Stage 4 -> p4 (3)
-    const activePhotoIndex = targetStage === 0 ? 0 : targetStage - 1;
+    // Active photo index:
+    // Stage 1 -> none (-1), Stage 2 -> p1 (0), Stage 3 -> none (-1), Stage 4 -> p2 (1),
+    // Stage 5 -> none (-1), Stage 6 -> p3 (2), Stage 7 -> none (-1), Stage 8 -> p4 (3)
+    const activePhotoIndex = (targetStage % 2 === 0) ? (targetStage / 2) - 1 : -1;
 
     photos.forEach((photo, i) => {
+      const isLeft = (i === 0 || i === 2);
       if (i === activePhotoIndex) {
         gsap.to(photo, {
           opacity: 1,
@@ -1830,7 +1834,8 @@ function initHolaOverviewAnimation() {
       } else {
         gsap.to(photo, {
           opacity: 0,
-          scale: 0.92,
+          x: isLeft ? -30 : 30,
+          scale: 0.94,
           duration: dur * 0.7,
           ease: 'power2.in',
           pointerEvents: 'none',
@@ -1842,28 +1847,17 @@ function initHolaOverviewAnimation() {
 
   const isMobileOverview = window.innerWidth <= 768;
 
-  // Pure ScrollTrigger progress tracking mapped across 5 stages (0, 1, 2, 3, 4)
+  // ScrollTrigger progress tracking mapped across 8 stages (1 through 8)
   ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: isMobileOverview ? '+=1200' : '+=2200',
+    end: isMobileOverview ? '+=2800' : '+=4000',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
-      let targetStage = 0;
-      if (p < 0.12) {
-        targetStage = 0; // Text 1 only
-      } else if (p >= 0.12 && p < 0.32) {
-        targetStage = 1; // Text 1 + Photo 1
-      } else if (p >= 0.32 && p < 0.55) {
-        targetStage = 2; // Text 2 + Photo 2
-      } else if (p >= 0.55 && p < 0.78) {
-        targetStage = 3; // Text 3 + Photo 3
-      } else {
-        targetStage = 4; // Text 4 + Photo 4
-      }
+      const targetStage = Math.min(8, Math.max(1, Math.floor(p * 8) + 1));
       goToStage(targetStage);
     }
   });

@@ -2622,8 +2622,8 @@ section[id] {
 }
 
 .hola-floating-media.media-photo-1 {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hola-floating-media.media-left {
