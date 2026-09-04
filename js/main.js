@@ -1231,6 +1231,7 @@ function initLogo3DShowcaseAnimation() {
 
   // 4. Full Logo Completion Extras
   const badge = document.getElementById('about-badge-floating');
+  const badgeLeft = document.getElementById('about-badge-floating-left');
   const reticle = document.getElementById('about-reticle');
   const hudTL = document.getElementById('hud-tl');
   const hudTR = document.getElementById('hud-tr');
@@ -1304,6 +1305,7 @@ function initLogo3DShowcaseAnimation() {
       if (hudBR) gsap.to(hudBR, { opacity: 0.85, x: 0, y: 0, rotation: 0, duration: dur, ease: 'power2.out', overwrite: 'auto' });
       if (reticle) gsap.to(reticle, { opacity: 0.6, scale: 1, rotation: 0, duration: dur, ease: 'power2.out', overwrite: 'auto' });
       if (badge) gsap.to(badge, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: dur, ease: 'back.out(1.5)', overwrite: 'auto' });
+      if (badgeLeft) gsap.to(badgeLeft, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: dur, ease: 'back.out(1.5)', overwrite: 'auto' });
     } else {
       if (glowBlue) gsap.to(glowBlue, { opacity: 0, scale: 0.15, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
       if (glowGold) gsap.to(glowGold, { opacity: 0, scale: 0.15, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
@@ -1313,6 +1315,7 @@ function initLogo3DShowcaseAnimation() {
       if (hudBR) gsap.to(hudBR, { opacity: 0, x: 300, y: 200, rotation: -90, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
       if (reticle) gsap.to(reticle, { opacity: 0, scale: 3.0, rotation: 180, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
       if (badge) gsap.to(badge, { opacity: 0, x: 380, y: 260, rotation: 35, scale: 0.2, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
+      if (badgeLeft) gsap.to(badgeLeft, { opacity: 0, x: -380, y: -260, rotation: -35, scale: 0.2, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
     }
   }
 

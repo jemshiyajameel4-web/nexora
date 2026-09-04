@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><clipPath id='tc'><polygon points='0,0 100,0 100,43 0,65'/></clipPath><clipPath id='bc'><polygon points='0,65 100,43 100,100 0,100'/></clipPath><rect width='100' height='100' rx='20' fill='%2307090E'/><path d='M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z' fill='%230284C7' clip-path='url(%23tc)'/><path d='M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z' fill='%23F97316' clip-path='url(%23bc)'/><path d='M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='%23F59E0B'/></svg>" />
+  <!-- Favicon SVG based on Nexora Branding -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><clipPath id='tc'><polygon points='-10,-10 110,-10 110,48 -10,76'/></clipPath><clipPath id='bc'><polygon points='-10,76 110,48 110,110 -10,110'/></clipPath><rect width='100' height='100' rx='20' fill='%2307090E'/><path d='M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z' fill='%231D70B8' clip-path='url(%23tc)'/><path d='M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z' fill='%23F97316' clip-path='url(%23bc)'/><path d='M2 77C5 87 20 86 40 74C60 62 76 46 83 38L72 28L98 16L88 54L80 41C73 50 57 66 37 78C21 88 7 87 2 77Z' fill='%23FFFFFF'/><path d='M4 76C7 85 21 84 40 72C59 60 75 44 82 37L72 28L98 16L80 41C73 49 57 64 37 76C21 86 8 85 4 76Z' fill='%23F59E0B'/><path d='M98 16L88 54L80 41L82 37Z' fill='%23EA580C'/></svg>" />
 </head>
 <body style="background: var(--bg-primary);">
 
@@ -20,36 +21,42 @@
           <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
             <defs>
               <linearGradient id="prjLogoBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#0284C7"/>
-                <stop offset="50%" stop-color="#1D4ED8"/>
-                <stop offset="100%" stop-color="#1E40AF"/>
+                <stop offset="0%" stop-color="#1D70B8"/>
+                <stop offset="60%" stop-color="#0284C7"/>
+                <stop offset="100%" stop-color="#0369A1"/>
               </linearGradient>
               <linearGradient id="prjLogoOrange" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#FB923C"/>
-                <stop offset="50%" stop-color="#F97316"/>
-                <stop offset="100%" stop-color="#EA580C"/>
+                <stop offset="0%" stop-color="#F97316"/>
+                <stop offset="60%" stop-color="#EA580C"/>
+                <stop offset="100%" stop-color="#C2410C"/>
               </linearGradient>
               <linearGradient id="prjLogoArrow" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#FACC15"/>
-                <stop offset="50%" stop-color="#EAB308"/>
-                <stop offset="100%" stop-color="#D97706"/>
+                <stop offset="0%" stop-color="#F97316"/>
+                <stop offset="40%" stop-color="#F59E0B"/>
+                <stop offset="100%" stop-color="#FBBF24"/>
+              </linearGradient>
+              <linearGradient id="prjLogoArrowDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#EA580C"/>
+                <stop offset="100%" stop-color="#B45309"/>
               </linearGradient>
               <clipPath id="prjTopNClip">
-                <polygon points="0,0 100,0 100,43 0,65"/>
+                <polygon points="-10,-10 110,-10 110,48 -10,76"/>
               </clipPath>
               <clipPath id="prjBottomNClip">
-                <polygon points="0,65 100,43 100,100 0,100"/>
+                <polygon points="-10,76 110,48 110,110 -10,110"/>
               </clipPath>
             </defs>
             <rect width="100" height="100" rx="16" fill="#0A0D14" stroke="rgba(255,255,255,0.12)"/>
-            <!-- 'N' letter top part (Blue) -->
-            <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#prjLogoBlue)" clip-path="url(#prjTopNClip)"/>
-            <!-- 'N' letter bottom part (Orange) -->
-            <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#prjLogoOrange)" clip-path="url(#prjBottomNClip)"/>
+            <!-- 'N' letter Top part (Blue) -->
+            <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#prjLogoBlue)" clip-path="url(#prjTopNClip)"/>
+            <!-- 'N' letter Bottom part (Orange) -->
+            <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#prjLogoOrange)" clip-path="url(#prjBottomNClip)"/>
             <!-- White halo outline behind arrow -->
-            <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 77C5 87 20 86 40 74C60 62 76 46 83 38L72 28L98 16L88 54L80 41C73 50 57 66 37 78C21 88 7 87 2 77Z" fill="#FFFFFF"/>
             <!-- Swirling Golden Arrow -->
-            <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="url(#prjLogoArrow)"/>
+            <path d="M4 76C7 85 21 84 40 72C59 60 75 44 82 37L72 28L98 16L80 41C73 49 57 64 37 76C21 86 8 85 4 76Z" fill="url(#prjLogoArrow)"/>
+            <!-- 3D Arrowhead Bevel -->
+            <path d="M98 16L88 54L80 41L82 37Z" fill="url(#prjLogoArrowDark)"/>
           </svg>
         </div>
         <div class="logo-text">
