@@ -221,8 +221,8 @@ button {
 
 @media (max-width: 768px) {
   .section-padding {
-    padding-top: 45px;
-    padding-bottom: 45px;
+    padding-top: 36px;
+    padding-bottom: 36px;
   }
 }
 
@@ -590,12 +590,12 @@ section[id] {
    =================================================================== */
 .hero {
   position: relative;
-  min-height: 90vh;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 100px 0 50px;
+  padding: 90px 0 25px;
 }
 
 .hero-media-bg {
@@ -1077,9 +1077,25 @@ section[id] {
   font-size: 1.05rem;
   color: #CBD5E1;
   margin-top: 14px;
-  max-width: 420px;
+  max-width: 450px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
   will-change: transform, opacity;
+}
+
+.about-logo-motto .motto-blue {
+  color: #38BDF8;
+  font-style: italic;
+  font-weight: 600;
+}
+.about-logo-motto .motto-orange {
+  color: #F59E0B;
+  font-style: italic;
+  font-weight: 600;
+}
+.about-logo-motto .motto-gray {
+  color: #CBD5E1;
+  font-style: italic;
+  font-weight: 400;
 }
 
 .about-logo-pill {
@@ -1328,13 +1344,14 @@ section[id] {
     margin-bottom: 6px;
   }
 
-  /* Hero Section */
+  /* Hero Section (Full Viewport Screen Card on Mobile) */
   .hero {
     min-height: 100svh;
-    padding: 85px 16px 30px;
+    padding: 85px 16px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     box-sizing: border-box;
   }
 
@@ -1376,12 +1393,15 @@ section[id] {
     font-size: 0.9rem;
   }
 
-  /* 3D Logo Showcase Stage (#about) */
+  /* 3D Logo Showcase Stage (#about - Full Viewport Screen Stage on Mobile) */
   .about-pin-track {
-    height: 100dvh;
-    min-height: 480px;
-    max-height: 680px;
+    height: 100svh;
+    min-height: 100svh;
+    max-height: none;
     padding: 70px 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
   }
 
@@ -1693,31 +1713,34 @@ section[id] {
 
 .hola-founder-grid {
   display: grid;
-  grid-template-columns: 460px 1fr;
-  gap: 56px;
+  grid-template-columns: 320px 1fr;
+  gap: 48px;
   align-items: flex-start;
 }
 
 .hola-founder-media {
   display: flex;
   flex-direction: column;
+  max-width: 320px;
+  width: 100%;
 }
 
 .hola-founder-img-box {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
+  aspect-ratio: 4 / 5;
+  max-height: 380px;
+  border-radius: 16px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 .hola-founder-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 15%;
   filter: brightness(0.96) contrast(1.04);
   transition: transform var(--transition-normal);
 }
@@ -1797,8 +1820,11 @@ section[id] {
 /* Responsive Media Queries matching hola.design */
 @media (max-width: 1024px) {
   .hola-founder-grid {
-    grid-template-columns: 360px 1fr;
-    gap: 40px;
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+  }
+  .hola-founder-media {
+    max-width: 280px;
   }
 }
 
@@ -1813,8 +1839,15 @@ section[id] {
     grid-template-columns: 1fr;
     gap: 28px;
   }
+  .hola-founder-media {
+    max-width: 240px;
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
+  }
   .hola-founder-img-box {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
+    max-height: 300px;
   }
   .hola-founder-statement {
     font-size: clamp(1.15rem, 4.6vw, 1.4rem);
@@ -3450,16 +3483,16 @@ select.form-control option {
 /* Floating Contact Rail Mobile Responsiveness */
 @media (max-width: 768px) {
   .floating-contact-rail {
-    right: 8px;
-    gap: 14px;
+    right: 12px;
+    gap: 18px;
   }
   .rail-btn {
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
   }
   .rail-btn svg {
-    width: 22px;
-    height: 22px;
+    width: 34px;
+    height: 34px;
   }
   .rail-btn .rail-tooltip {
     display: none !important;

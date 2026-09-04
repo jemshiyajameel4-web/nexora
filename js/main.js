@@ -565,7 +565,28 @@ function initHeroAnimatedCanvas() {
     });
   }
 
+  let isCanvasVisible = true;
+  let canvasAnimId = null;
+
+  if ('IntersectionObserver' in window && heroSection) {
+    const canvasObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isCanvasVisible = entry.isIntersecting;
+        if (isCanvasVisible && !canvasAnimId) {
+          animate();
+        }
+      });
+    }, { threshold: 0.05 });
+    canvasObserver.observe(heroSection);
+  }
+
   function animate() {
+    if (!isCanvasVisible) {
+      canvasAnimId = null;
+      return;
+    }
+    canvasAnimId = requestAnimationFrame(animate);
+
     ctx.clearRect(0, 0, width, height);
 
     // Smooth parallax interpolation for interior background
@@ -601,7 +622,27 @@ function initHeroAnimatedCanvas() {
       ctx.restore();
     });
 
-    requestAnimationFrame(animate);
+    // Draw subtle dynamic constellation lines between nearby floating particles
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110) {
+          const lineAlpha = (1 - dist / 110) * 0.18;
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = particles[i].isGold || particles[j].isGold
+            ? `rgba(245, 158, 11, ${lineAlpha})`
+            : `rgba(56, 189, 248, ${lineAlpha * 0.7})`;
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
   }
   animate();
 }
@@ -730,7 +771,7 @@ function initServicesData() {
       const opacity = Math.max(0.35, 1 - Math.abs(normDist) * 0.35);
       const brightness = Math.max(0.72, 1 - Math.abs(normDist) * 0.25);
 
-      card.style.transform = `translate3d(calc(-50% + ${offset.toFixed(1)}px), -50%, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      card.style.transform = `translate(-50%, -50%) translate3d(${offset.toFixed(1)}px, 0px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       card.style.opacity = opacity.toFixed(3);
       card.style.filter = `brightness(${brightness.toFixed(3)})`;
     });
@@ -1169,22 +1210,25 @@ function initLogo3DShowcaseAnimation() {
   const section = document.getElementById('about');
   const stage = document.getElementById('about-visual-stage');
   const core = document.getElementById('about-logo-card');
+  const symbolWrap = document.getElementById('about-logo-symbol-wrap');
+  const metaWrap = document.getElementById('about-logo-meta-wrap');
   
   // 1. Letter "N"
   const letterN = document.getElementById('about-letter-n');
-  
+  const letterNOrange = document.getElementById('about-letter-n-orange');
+
   // 2. Logo Mark / Symbol Components
   const arrow = document.getElementById('about-logo-arrow');
   const ringOuter = document.getElementById('about-ring-outer');
   const ringInner = document.getElementById('about-ring-inner');
   const coreCircle = document.getElementById('about-core-circle');
-  
+
   // 3. Writings / Brand Text Components
   const title = document.getElementById('about-logo-title');
   const sub = document.getElementById('about-logo-sub');
   const motto = document.getElementById('about-logo-motto');
   const pill = document.getElementById('about-logo-pill');
-  
+
   // 4. Full Logo Completion Extras
   const badge = document.getElementById('about-badge-floating');
   const reticle = document.getElementById('about-reticle');
@@ -1195,8 +1239,7 @@ function initLogo3DShowcaseAnimation() {
   const glowBlue = document.getElementById('stage-glow-blue');
   const glowGold = document.getElementById('stage-glow-gold');
 
-  const symbolWrap = document.getElementById('about-logo-symbol-wrap');
-  const metaWrap = document.getElementById('about-logo-meta');
+  const preBeacon = document.getElementById('about-pre-beacon');
 
   if (!stage || !core || !pinTrack) return;
 
@@ -1206,12 +1249,22 @@ function initLogo3DShowcaseAnimation() {
   function applyStep(step, immediate = false) {
     const dur = immediate ? 0 : 0.55;
 
-    // Stage 1: Letter "N"
-    if (letterN) {
-      if (step >= 1) {
-        gsap.to(letterN, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: dur, ease: 'back.out(1.4)', overwrite: 'auto' });
+    // Stage 0: Pre-Assembly Holographic Beacon (visible at step 0, vanishes as logo animation comes)
+    if (preBeacon) {
+      if (step === 0) {
+        gsap.to(preBeacon, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: dur, ease: 'power2.out', overwrite: 'auto' });
       } else {
-        gsap.to(letterN, { opacity: 0, scale: 0.2, y: -120, rotation: 35, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
+        gsap.to(preBeacon, { opacity: 0, scale: 1.8, filter: 'blur(10px)', duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
+      }
+    }
+
+    // Stage 1: Letter "N" (Blue top & Orange bottom)
+    const nElements = [letterN, letterNOrange].filter(Boolean);
+    if (nElements.length > 0) {
+      if (step >= 1) {
+        gsap.to(nElements, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: dur, ease: 'back.out(1.4)', overwrite: 'auto' });
+      } else {
+        gsap.to(nElements, { opacity: 0, scale: 0.2, y: -120, rotation: 35, duration: dur * 0.7, ease: 'power2.in', overwrite: 'auto' });
       }
     }
 
@@ -1272,7 +1325,7 @@ function initLogo3DShowcaseAnimation() {
   const stepTrigger = ScrollTrigger.create({
     trigger: pinTrack,
     start: 'top top',
-    end: isMobileLogo ? '+=120%' : '+=300%',
+    end: isMobileLogo ? '+=100%' : '+=300%',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
@@ -1303,48 +1356,7 @@ function initLogo3DShowcaseAnimation() {
     })
   });
 
-  // Wheel Gesture Handler for desktop discrete navigation
-  let lastGestureTime = 0;
-  function handleScrollGesture(deltaY) {
-    if (!stepTrigger.isActive) return;
-    const now = Date.now();
-    if (now - lastGestureTime < 420) return;
 
-    if (deltaY > 15) {
-      if (currentStep < 4) {
-        lastGestureTime = now;
-        const nextProgress = Math.min(1.0, (currentStep + 1) * 0.25);
-        gsap.to(window, {
-          scrollTo: stepTrigger.start + (stepTrigger.end - stepTrigger.start) * nextProgress,
-          duration: 0.45,
-          ease: 'power2.out',
-          overwrite: 'auto'
-        });
-      }
-    } else if (deltaY < -15) {
-      if (currentStep > 0) {
-        lastGestureTime = now;
-        const prevProgress = Math.max(0.0, (currentStep - 1) * 0.25);
-        gsap.to(window, {
-          scrollTo: stepTrigger.start + (stepTrigger.end - stepTrigger.start) * prevProgress,
-          duration: 0.45,
-          ease: 'power2.out',
-          overwrite: 'auto'
-        });
-      }
-    }
-  }
-
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  if (!isTouchDevice) {
-    window.addEventListener('wheel', (e) => {
-      if (stepTrigger.isActive) {
-        if ((e.deltaY > 0 && currentStep < 4) || (e.deltaY < 0 && currentStep > 0)) {
-          handleScrollGesture(e.deltaY);
-        }
-      }
-    }, { passive: true });
-  }
 
   // 2. High-Performance Gyroscopic 3D Tilt via gsap.quickTo
   const qCoreRotX = gsap.quickTo(core, 'rotationX', { duration: 0.6, ease: 'power3.out' });
@@ -1758,7 +1770,8 @@ function initHolaOverviewAnimation() {
   function resetAll() {
     gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
     gsap.set([t2, t3, t4], { opacity: 0, y: 25, scale: 0.96, pointerEvents: 'none' });
-    gsap.set(photos, { opacity: 0, scale: 0.92, pointerEvents: 'none' });
+    gsap.set(p1, { opacity: 1, scale: 1, pointerEvents: 'auto' });
+    gsap.set([p2, p3, p4], { opacity: 0, scale: 0.92, pointerEvents: 'none' });
     currentStage = 0;
   }
 
@@ -1796,8 +1809,8 @@ function initHolaOverviewAnimation() {
       }
     });
 
-    // Active photo index: Stage 0 -> -1 (all hidden), Stage 1 -> p1 (0), Stage 2 -> p2 (1), Stage 3 -> p3 (2), Stage 4 -> p4 (3)
-    const activePhotoIndex = targetStage === 0 ? -1 : targetStage - 1;
+    // Active photo index: Stage 0 -> p1 (0), Stage 1 -> p1 (0), Stage 2 -> p2 (1), Stage 3 -> p3 (2), Stage 4 -> p4 (3)
+    const activePhotoIndex = targetStage === 0 ? 0 : targetStage - 1;
 
     photos.forEach((photo, i) => {
       if (i === activePhotoIndex) {

@@ -1,26 +1,29 @@
 import * as THREE from 'three';
 
 /**
- * NEXORA CREATIVE STUDIO — 3D LUXURY INTERIOR DESIGN ANIMATION
- * Real-time Architectural 3D Scene with Slatted Walls, Reception Counter,
- * Glowing 3D Signage, Pendant Lights & Cinematic Flythrough Camera
+ * NEXORA CREATIVE STUDIO — CREATIVE LUXURY ARCHITECTURAL 3D ANIMATION
+ * Dynamic Holographic Wave Mesh, Floating 3D Signage Geometry, 
+ * Interactive Cursor Spotlight & Glowing Dust Constellation
  */
 
 export function initInterior3DAnimation() {
   const container = document.getElementById('hero-3d-canvas-container');
   if (!container) return;
 
-  // Scene, Camera, Renderer
+  // Clear any existing canvas children if re-initialized
+  container.innerHTML = '';
+
+  // 1. Scene, Camera, Renderer Setup
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0e1422, 0.022);
+  scene.fog = new THREE.FogExp2(0x131c31, 0.012);
 
   const camera = new THREE.PerspectiveCamera(
-    48,
+    50,
     container.clientWidth / container.clientHeight,
     0.1,
     100
   );
-  camera.position.set(0, 1.2, 7.5);
+  camera.position.set(0, 1.2, 8);
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -30,7 +33,7 @@ export function initInterior3DAnimation() {
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.25;
+  renderer.toneMappingExposure = 1.85;
   container.appendChild(renderer.domElement);
 
   // Resize handler
@@ -43,7 +46,7 @@ export function initInterior3DAnimation() {
     renderer.setSize(w, h);
   });
 
-  // Mouse Interaction
+  // Mouse Interaction Physics State
   let mouseX = 0, mouseY = 0;
   let targetMouseX = 0, targetMouseY = 0;
   const heroSection = document.getElementById('home');
@@ -61,309 +64,267 @@ export function initInterior3DAnimation() {
   }
 
   /* ===================================================================
-     LIGHTING RIG
+     LIGHTING RIG (BRIGHT & VIBRANT LUXURY GOLD & CYAN ILLUMINATION)
      =================================================================== */
-  const ambientLight = new THREE.AmbientLight(0x1e2c4c, 2.8);
+  const ambientLight = new THREE.AmbientLight(0x2d436b, 3.8);
   scene.add(ambientLight);
 
-  // Warm amber spotlight on main brand feature wall
-  const mainSpot = new THREE.SpotLight(0xF59E0B, 10);
-  mainSpot.position.set(0, 4.5, 3.5);
-  mainSpot.angle = Math.PI / 3.5;
-  mainSpot.penumbra = 0.8;
-  mainSpot.decay = 2;
-  mainSpot.distance = 16;
-  scene.add(mainSpot);
+  // Top Sun/Key Light for high clarity
+  const topKeyLight = new THREE.DirectionalLight(0xfff5e6, 2.5);
+  topKeyLight.position.set(0, 8, 4);
+  scene.add(topKeyLight);
 
-  // Cool architectural blue backlight accent
-  const blueBackLight = new THREE.PointLight(0x2563EB, 8, 14);
-  blueBackLight.position.set(-3.5, 2.5, -1.8);
-  scene.add(blueBackLight);
+  // Interactive Cursor Spotlight (Warm Amber/Gold)
+  const cursorSpot = new THREE.SpotLight(0xF59E0B, 24);
+  cursorSpot.position.set(0, 4, 6);
+  cursorSpot.angle = Math.PI / 2.8;
+  cursorSpot.penumbra = 0.8;
+  cursorSpot.decay = 1.6;
+  cursorSpot.distance = 28;
+  scene.add(cursorSpot);
 
-  // Warm counter downlight
-  const warmCounterLight = new THREE.PointLight(0xFBBF24, 6, 9);
-  warmCounterLight.position.set(0, 1.8, 1.2);
-  scene.add(warmCounterLight);
+  // Secondary Sapphire/Cyan Architectural Backlight
+  const cyanBackLight = new THREE.PointLight(0x38BDF8, 16, 24);
+  cyanBackLight.position.set(-4, 3, -2);
+  scene.add(cyanBackLight);
 
-  /* ===================================================================
-     ARCHITECTURAL MATERIALS
-     =================================================================== */
-  const woodSlatMaterial = new THREE.MeshStandardMaterial({
-    color: 0x8a5830,
-    roughness: 0.5,
-    metalness: 0.15
-  });
-
-  const wallBaseMaterial = new THREE.MeshStandardMaterial({
-    color: 0x141b2c,
-    roughness: 0.8,
-    metalness: 0.12
-  });
-
-  const goldMetallicMaterial = new THREE.MeshStandardMaterial({
-    color: 0xE8B042,
-    roughness: 0.22,
-    metalness: 0.95,
-    emissive: 0x6a460d,
-    emissiveIntensity: 0.35
-  });
-
-  const darkMarbleMaterial = new THREE.MeshStandardMaterial({
-    color: 0x101624,
-    roughness: 0.15,
-    metalness: 0.65
-  });
-
-  const glowingLedMaterial = new THREE.MeshBasicMaterial({
-    color: 0xFBBF24
-  });
-
-  const blueGlowMaterial = new THREE.MeshBasicMaterial({
-    color: 0x3D73FF
-  });
+  // Warm Gold Feature Light
+  const goldFeatureLight = new THREE.PointLight(0xFBBF24, 15, 22);
+  goldFeatureLight.position.set(4, -1, 2);
+  scene.add(goldFeatureLight);
 
   /* ===================================================================
-     ARCHITECTURAL GEOMETRY (LUXURY INTERIOR SPACE)
+     MATERIALS & TEXTURES
      =================================================================== */
-  const interiorGroup = new THREE.Group();
-  scene.add(interiorGroup);
+  const goldMaterial = new THREE.MeshStandardMaterial({
+    color: 0xFBBF24,
+    roughness: 0.12,
+    metalness: 0.88,
+    emissive: 0x8a5b0f,
+    emissiveIntensity: 0.6
+  });
 
-  // 1. Polished Marble Floor
-  const floorGeo = new THREE.PlaneGeometry(30, 20);
-  const floor = new THREE.Mesh(floorGeo, darkMarbleMaterial);
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -1.6;
-  interiorGroup.add(floor);
+  const chromeMaterial = new THREE.MeshStandardMaterial({
+    color: 0x38bdf8,
+    roughness: 0.08,
+    metalness: 0.9,
+    emissive: 0x0c4a6e,
+    emissiveIntensity: 0.4
+  });
 
-  // Floor grid accent lines (Reflective luxury tiles)
-  const gridHelper = new THREE.GridHelper(30, 30, 0x1E50D8, 0x182234);
-  gridHelper.position.y = -1.59;
-  interiorGroup.add(gridHelper);
+  const glowingGoldMat = new THREE.MeshBasicMaterial({ color: 0xFDE047 });
+  const glowingCyanMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8 });
+  const glowingBlueMat = new THREE.MeshBasicMaterial({ color: 0x3B82F6 });
 
-  // 2. Ceiling with Recessed Light Channels
-  const ceilingGeo = new THREE.PlaneGeometry(30, 20);
-  const ceiling = new THREE.Mesh(ceilingGeo, wallBaseMaterial);
-  ceiling.rotation.x = Math.PI / 2;
-  ceiling.position.y = 4.2;
-  interiorGroup.add(ceiling);
+  /* ===================================================================
+     1. ARCHITECTURAL UNDULATING WAVE MESH (HOLOGRAPHIC GRID)
+     =================================================================== */
+  const waveWidth = 24;
+  const waveHeight = 16;
+  const waveSegmentsW = 48;
+  const waveSegmentsH = 32;
 
-  // Recessed ceiling LED strip
-  const ceilingLedGeo = new THREE.BoxGeometry(16, 0.05, 0.15);
-  const ceilingLed = new THREE.Mesh(ceilingLedGeo, glowingLedMaterial);
-  ceilingLed.position.set(0, 4.18, 0);
-  interiorGroup.add(ceilingLed);
+  const waveGeo = new THREE.PlaneGeometry(waveWidth, waveHeight, waveSegmentsW, waveSegmentsH);
+  const waveMat = new THREE.MeshStandardMaterial({
+    color: 0x253b68,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.65,
+    roughness: 0.3,
+    metalness: 0.85
+  });
 
-  // 3. Back Feature Wall
-  const backWallGeo = new THREE.BoxGeometry(22, 6, 0.2);
-  const backWall = new THREE.Mesh(backWallGeo, wallBaseMaterial);
-  backWall.position.set(0, 1.3, -2.5);
-  interiorGroup.add(backWall);
+  const waveMesh = new THREE.Mesh(waveGeo, waveMat);
+  waveMesh.rotation.x = -Math.PI / 2.5;
+  waveMesh.position.set(0, -2.2, -1);
+  scene.add(waveMesh);
 
-  // 4. Vertical Fluted Timber Slats on Accent Wall
-  const slatCount = 48;
-  const slatWidth = 0.08;
-  const slatHeight = 4.8;
-  const slatDepth = 0.09;
-  const slatSpacing = 0.18;
-  const startX = -((slatCount * slatSpacing) / 2);
+  // Store initial vertex positions for smooth wave displacement
+  const posAttr = waveGeo.attributes.position;
+  const initialPositions = posAttr.array.slice();
 
-  const slatGeo = new THREE.BoxGeometry(slatWidth, slatHeight, slatDepth);
-  for (let i = 0; i < slatCount; i++) {
-    const slat = new THREE.Mesh(slatGeo, woodSlatMaterial);
-    slat.position.set(startX + i * slatSpacing, 1.4, -2.38);
-    interiorGroup.add(slat);
-  }
+  /* ===================================================================
+     2. FLOATING 3D SIGNAGE GEOMETRY (LUXURY POLYHEDRA & RINGS)
+     =================================================================== */
+  const floatingGroup = new THREE.Group();
+  scene.add(floatingGroup);
 
-  // Fluted panel bottom warm cove glow strip
-  const coveGlowGeo = new THREE.BoxGeometry(slatCount * slatSpacing, 0.04, 0.06);
-  const coveGlow = new THREE.Mesh(coveGlowGeo, glowingLedMaterial);
-  coveGlow.position.set(0, -0.98, -2.32);
-  interiorGroup.add(coveGlow);
+  const floatingElements = [];
 
-  // 5. 3D Architectural Reception Counter Island
-  const counterGroup = new THREE.Group();
-  counterGroup.position.set(0, -0.7, 0.8);
+  // Floating Gold Icosahedron (Main brand emblem placeholder)
+  const icoGeo = new THREE.IcosahedronGeometry(0.85, 0);
+  const icoMesh = new THREE.Mesh(icoGeo, goldMaterial);
+  icoMesh.position.set(-2.8, 1.4, 0.5);
+  floatingGroup.add(icoMesh);
+  floatingElements.push({ mesh: icoMesh, rotX: 0.008, rotY: 0.012, baseY: 1.4, phase: 0 });
 
-  // Main counter body with curved profile
-  const counterBodyGeo = new THREE.CylinderGeometry(2.4, 2.2, 1.6, 32, 1, false, 0, Math.PI);
-  const counterBody = new THREE.Mesh(counterBodyGeo, wallBaseMaterial);
-  counterBody.rotation.y = -Math.PI / 2;
-  counterGroup.add(counterBody);
+  // Outer Glowing Ring around Icosahedron
+  const ring1Geo = new THREE.TorusGeometry(1.2, 0.025, 16, 64);
+  const ring1Mesh = new THREE.Mesh(ring1Geo, glowingGoldMat);
+  ring1Mesh.position.set(-2.8, 1.4, 0.5);
+  floatingGroup.add(ring1Mesh);
+  floatingElements.push({ mesh: ring1Mesh, rotX: -0.015, rotY: 0.006, baseY: 1.4, phase: 0.5 });
 
-  // Fluted panels on the front curved counter
-  const counterSlats = 26;
-  const cSlatGeo = new THREE.BoxGeometry(0.06, 1.55, 0.05);
-  for (let i = 0; i < counterSlats; i++) {
-    const angle = (i / (counterSlats - 1)) * Math.PI - Math.PI / 2;
-    const radius = 2.42;
-    const cSlat = new THREE.Mesh(cSlatGeo, woodSlatMaterial);
-    cSlat.position.set(Math.sin(angle) * radius, 0, Math.cos(angle) * radius);
-    cSlat.rotation.y = angle;
-    counterGroup.add(cSlat);
-  }
+  // Floating Cyan Octahedron
+  const octGeo = new THREE.OctahedronGeometry(0.65, 0);
+  const octMesh = new THREE.Mesh(octGeo, chromeMaterial);
+  octMesh.position.set(3.2, 1.8, -0.5);
+  floatingGroup.add(octMesh);
+  floatingElements.push({ mesh: octMesh, rotX: 0.01, rotY: -0.014, baseY: 1.8, phase: 1.2 });
 
-  // Countertop Surface (Gold / Titanium trim)
-  const topGeo = new THREE.CylinderGeometry(2.52, 2.52, 0.1, 32, 1, false, 0, Math.PI);
-  const countertop = new THREE.Mesh(topGeo, goldMetallicMaterial);
-  countertop.rotation.y = -Math.PI / 2;
-  countertop.position.y = 0.85;
-  counterGroup.add(countertop);
+  // Floating Glowing Torus (Signage Arc)
+  const arcGeo = new THREE.TorusGeometry(0.9, 0.035, 16, 48, Math.PI * 1.4);
+  const arcMesh = new THREE.Mesh(arcGeo, glowingCyanMat);
+  arcMesh.position.set(3.2, 1.8, -0.5);
+  floatingGroup.add(arcMesh);
+  floatingElements.push({ mesh: arcMesh, rotX: -0.008, rotY: 0.02, baseY: 1.8, phase: 1.8 });
 
-  // Under-counter ambient LED illumination strip
-  const counterGlowGeo = new THREE.CylinderGeometry(2.44, 2.44, 0.04, 32, 1, false, 0, Math.PI);
-  const counterGlow = new THREE.Mesh(counterGlowGeo, glowingLedMaterial);
-  counterGlow.rotation.y = -Math.PI / 2;
-  counterGlow.position.y = -0.75;
-  counterGroup.add(counterGlow);
-
-  interiorGroup.add(counterGroup);
-
-  // 6. 3D Architectural Insignia / Brand Nameplate on Feature Wall
-  const signageGroup = new THREE.Group();
-  signageGroup.position.set(0, 2.1, -2.25);
-
-  // Brand emblem backdrop plaque
-  const plaqueGeo = new THREE.BoxGeometry(4.8, 1.3, 0.08);
-  const plaque = new THREE.Mesh(plaqueGeo, new THREE.MeshStandardMaterial({
-    color: 0x07090e,
-    roughness: 0.4,
-    metalness: 0.8
-  }));
-  signageGroup.add(plaque);
-
-  // Plaque perimeter gold frame
-  const frameGeo = new THREE.BoxGeometry(4.9, 1.4, 0.04);
-  const frame = new THREE.Mesh(frameGeo, goldMetallicMaterial);
-  frame.position.z = -0.02;
-  signageGroup.add(frame);
-
-  // 3D Geometric Brand Icon (Stylized N with arrow dynamic geometry)
-  const iconBoxGeo = new THREE.BoxGeometry(0.6, 0.6, 0.12);
-  const iconMesh = new THREE.Mesh(iconBoxGeo, goldMetallicMaterial);
-  iconMesh.position.set(-1.6, 0, 0.08);
-  signageGroup.add(iconMesh);
-
-  // Glowing blue accent inside icon
-  const innerIconGeo = new THREE.BoxGeometry(0.4, 0.4, 0.14);
-  const innerIcon = new THREE.Mesh(innerIconGeo, blueGlowMaterial);
-  innerIcon.position.set(-1.6, 0, 0.08);
-  signageGroup.add(innerIcon);
-
-  // Dimensional Lettering Blocks simulating "NEXORA CREATIVE STUDIO"
-  const letterBlocks = [
-    { x: -0.9, w: 0.22, h: 0.45 },
-    { x: -0.55, w: 0.22, h: 0.45 },
-    { x: -0.2, w: 0.24, h: 0.45 },
-    { x: 0.18, w: 0.22, h: 0.45 },
-    { x: 0.55, w: 0.22, h: 0.45 },
-    { x: 0.92, w: 0.24, h: 0.45 }
+  // Architectural Floating Glass/Gold Blocks (3D Lettering Accents)
+  const blockGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+  const blockPositions = [
+    { x: -4.5, y: -0.5, z: 1.2 },
+    { x: 4.2, y: -0.8, z: 1.0 },
+    { x: -1.2, y: 2.5, z: -1.8 },
+    { x: 1.8, y: 2.2, z: -1.5 }
   ];
 
-  letterBlocks.forEach(b => {
-    const lGeo = new THREE.BoxGeometry(b.w, b.h, 0.1);
-    const lMesh = new THREE.Mesh(lGeo, goldMetallicMaterial);
-    lMesh.position.set(b.x + 0.3, 0.06, 0.08);
-    signageGroup.add(lMesh);
+  blockPositions.forEach((pos, i) => {
+    const bMesh = new THREE.Mesh(blockGeo, i % 2 === 0 ? goldMaterial : chromeMaterial);
+    bMesh.position.set(pos.x, pos.y, pos.z);
+    floatingGroup.add(bMesh);
+    floatingElements.push({
+      mesh: bMesh,
+      rotX: (Math.random() - 0.5) * 0.02,
+      rotY: (Math.random() - 0.5) * 0.02,
+      baseY: pos.y,
+      phase: i * 0.8
+    });
   });
 
-  // Subtitle bar
-  const subBarGeo = new THREE.BoxGeometry(2.1, 0.07, 0.06);
-  const subBar = new THREE.Mesh(subBarGeo, glowingLedMaterial);
-  subBar.position.set(0.45, -0.28, 0.08);
-  signageGroup.add(subBar);
-
-  interiorGroup.add(signageGroup);
-
-  // 7. Modern Hanging Pendant Lights
-  const pendantPoles = [-2.2, -0.75, 0.75, 2.2];
-  const pendants = [];
-
-  pendantPoles.forEach((px, idx) => {
-    const pGroup = new THREE.Group();
-    pGroup.position.set(px, 3.8, 1.2);
-
-    // Cable cord
-    const cordGeo = new THREE.CylinderGeometry(0.008, 0.008, 1.6, 8);
-    const cord = new THREE.Mesh(cordGeo, new THREE.MeshBasicMaterial({ color: 0x333333 }));
-    cord.position.y = -0.8;
-    pGroup.add(cord);
-
-    // Amber glass shade
-    const shadeGeo = new THREE.ConeGeometry(0.18, 0.35, 16);
-    const shade = new THREE.Mesh(shadeGeo, goldMetallicMaterial);
-    shade.position.y = -1.6;
-    pGroup.add(shade);
-
-    // Glowing filament bulb
-    const bulbGeo = new THREE.SphereGeometry(0.08, 16, 16);
-    const bulb = new THREE.Mesh(bulbGeo, glowingLedMaterial);
-    bulb.position.y = -1.72;
-    pGroup.add(bulb);
-
-    interiorGroup.add(pGroup);
-    pendants.push({ group: pGroup, phase: idx * 0.9 });
-  });
-
-  // 8. Architectural Floating Dust / Sparkles
-  const particleCount = 75;
+  /* ===================================================================
+     3. AMBIENT GLOWING DUST PARTICLES & CONSTELLATION
+     =================================================================== */
+  const particleCount = 130;
   const particleGeo = new THREE.BufferGeometry();
   const particlePos = new Float32Array(particleCount * 3);
+  const particleScales = new Float32Array(particleCount);
 
-  for (let i = 0; i < particleCount * 3; i += 3) {
-    particlePos[i] = (Math.random() - 0.5) * 16;
-    particlePos[i + 1] = Math.random() * 5 - 1.2;
-    particlePos[i + 2] = (Math.random() - 0.5) * 10;
+  for (let i = 0; i < particleCount; i++) {
+    particlePos[i * 3] = (Math.random() - 0.5) * 20;
+    particlePos[i * 3 + 1] = (Math.random() - 0.5) * 10;
+    particlePos[i * 3 + 2] = (Math.random() - 0.5) * 12;
+    particleScales[i] = Math.random() * 0.08 + 0.02;
   }
 
   particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+
+  // Custom particle texture canvas for soft circular glow
+  const pCanvas = document.createElement('canvas');
+  pCanvas.width = 64;
+  pCanvas.height = 64;
+  const pCtx = pCanvas.getContext('2d');
+  const pGrad = pCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  pGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+  pGrad.addColorStop(0.3, 'rgba(245, 158, 11, 0.8)');
+  pGrad.addColorStop(0.7, 'rgba(30, 80, 216, 0.3)');
+  pGrad.addColorStop(1, 'rgba(7, 9, 14, 0)');
+  pCtx.fillStyle = pGrad;
+  pCtx.fillRect(0, 0, 64, 64);
+
+  const pTexture = new THREE.CanvasTexture(pCanvas);
+
   const particleMat = new THREE.PointsMaterial({
-    color: 0xFBBF24,
-    size: 0.055,
+    size: 0.14,
+    map: pTexture,
     transparent: true,
-    opacity: 0.7,
-    blending: THREE.AdditiveBlending
+    opacity: 0.85,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
 
   const particleSystem = new THREE.Points(particleGeo, particleMat);
   scene.add(particleSystem);
 
   /* ===================================================================
-     ANIMATION LOOP (CINEMATIC CAMERA GLIDE & LIGHT PULSE)
+     ANIMATION & RENDER LOOP WITH VIEWPORT PAUSING FOR 60FPS SCROLLING
      =================================================================== */
-  let clock = new THREE.Clock();
+  const clock = new THREE.Clock();
+  let isHeroVisible = true;
+  let animFrameId = null;
+
+  if ('IntersectionObserver' in window && heroSection) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isHeroVisible = entry.isIntersecting;
+        if (isHeroVisible && !animFrameId) {
+          clock.start();
+          animate();
+        }
+      });
+    }, { threshold: 0.05 });
+    observer.observe(heroSection);
+  }
 
   function animate() {
-    requestAnimationFrame(animate);
+    if (!isHeroVisible) {
+      animFrameId = null;
+      return;
+    }
+    animFrameId = requestAnimationFrame(animate);
     const time = clock.getElapsedTime();
 
-    // Subtle interactive mouse lerping
-    mouseX += (targetMouseX - mouseX) * 0.04;
-    mouseY += (targetMouseY - mouseY) * 0.04;
+    // Smooth mouse lerping physics
+    mouseX += (targetMouseX - mouseX) * 0.05;
+    mouseY += (targetMouseY - mouseY) * 0.05;
 
-    // Cinematic continuous camera glide through the interior
-    const cameraOrbitX = Math.sin(time * 0.22) * 1.35 + mouseX * 0.8;
-    const cameraOrbitY = Math.cos(time * 0.18) * 0.35 + 1.2 - mouseY * 0.45;
-    const cameraOrbitZ = 7.2 + Math.sin(time * 0.15) * 0.6;
+    // Camera smooth orbit & subtle inertia glide
+    const camX = Math.sin(time * 0.18) * 0.8 + mouseX * 0.9;
+    const camY = Math.cos(time * 0.15) * 0.3 + 1.2 - mouseY * 0.5;
+    const camZ = 8 + Math.sin(time * 0.12) * 0.4;
+    camera.position.set(camX, camY, camZ);
+    camera.lookAt(mouseX * 0.4, 0.6 - mouseY * 0.3, 0);
 
-    camera.position.set(cameraOrbitX, cameraOrbitY, cameraOrbitZ);
-    camera.lookAt(mouseX * 0.3, 0.8 - mouseY * 0.2, 0);
+    // Update Interactive Cursor Spotlight
+    cursorSpot.position.x = mouseX * 5;
+    cursorSpot.position.y = 3 - mouseY * 3;
 
-    // Subtle gentle sway on pendant lights
-    pendants.forEach(p => {
-      p.group.rotation.z = Math.sin(time * 1.2 + p.phase) * 0.04;
+    // Dynamic wave mesh vertex displacement
+    const pos = waveGeo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const u = initialPositions[i * 3];
+      const v = initialPositions[i * 3 + 1];
+      const distToMouse = Math.sqrt(Math.pow(u - mouseX * 6, 2) + Math.pow(v - mouseY * 4, 2));
+      const mouseImpact = Math.max(0, 1 - distToMouse / 5) * 0.45;
+
+      const zWave = Math.sin(u * 0.4 + time * 1.4) * 0.35 +
+                    Math.cos(v * 0.5 + time * 1.2) * 0.35 +
+                    mouseImpact;
+
+      pos.setZ(i, zWave);
+    }
+    pos.needsUpdate = true;
+
+    // Rotate & bob floating 3D geometry
+    floatingElements.forEach(elem => {
+      elem.mesh.rotation.x += elem.rotX;
+      elem.mesh.rotation.y += elem.rotY;
+      elem.mesh.position.y = elem.baseY + Math.sin(time * 1.2 + elem.phase) * 0.15;
     });
 
-    // Dynamic light pulsing
-    warmCounterLight.intensity = 4.2 + Math.sin(time * 1.8) * 0.6;
-    blueBackLight.intensity = 5.5 + Math.cos(time * 1.4) * 0.8;
+    // Floating Group Parallax
+    floatingGroup.rotation.y = mouseX * 0.12;
+    floatingGroup.rotation.x = -mouseY * 0.08;
 
-    // Slowly drift particles
-    const positions = particleSystem.geometry.attributes.position.array;
-    for (let i = 1; i < particleCount * 3; i += 3) {
-      positions[i] += 0.0035;
-      if (positions[i] > 4.5) positions[i] = -1.2;
+    // Drift particles & pulse lighting
+    const pArray = particleSystem.geometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      pArray[i * 3 + 1] += Math.sin(time + i) * 0.003 + 0.002;
+      if (pArray[i * 3 + 1] > 6) pArray[i * 3 + 1] = -5;
     }
     particleSystem.geometry.attributes.position.needsUpdate = true;
+
+    cyanBackLight.intensity = 8 + Math.sin(time * 2.0) * 2.5;
+    goldFeatureLight.intensity = 7 + Math.cos(time * 1.8) * 2.0;
 
     renderer.render(scene, camera);
   }

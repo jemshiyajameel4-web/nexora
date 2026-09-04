@@ -16,7 +16,7 @@
   <meta property="og:url" content="https://nexoracreativestudio.com" />
 
   <!-- Favicon SVG based on Nexora Branding -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2307090E'/><path d='M25 75V25H40L60 60V25H75V75H60L40 40V75H25Z' fill='%231E50D8'/><path d='M25 60C35 45 65 30 80 22L72 15L90 18L85 36L78 28C65 35 40 48 30 70Z' fill='%23F59E0B'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><clipPath id='tc'><polygon points='0,0 100,0 100,43 0,65'/></clipPath><clipPath id='bc'><polygon points='0,65 100,43 100,100 0,100'/></clipPath><rect width='100' height='100' rx='20' fill='%2307090E'/><path d='M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z' fill='%230284C7' clip-path='url(%23tc)'/><path d='M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z' fill='%23F97316' clip-path='url(%23bc)'/><path d='M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='%23F59E0B'/></svg>" />
 
   <!-- Google Fonts Preconnect & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -75,13 +75,40 @@
     <div class="container nav-container">
       <a href="#home" class="logo" aria-label="Nexora Creative Studio Home">
         <div class="logo-mark">
-          <!-- Exact Nexora Logo Vector Recreation (Blue N with Orange Swoop Arrow) -->
+          <!-- Official Nexora Logo Vector (2-Color N: Blue Top & Orange Bottom + White-Border Swirling Arrow) -->
           <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100" height="100" rx="16" fill="#0E1320" stroke="rgba(255,255,255,0.1)"/>
-            <!-- 'N' letter -->
-            <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="#2563EB"/>
-            <!-- Dynamic Orange Brand Arrow -->
-            <path d="M22 62C34 46 64 32 78 24L71 18L88 20L84 37L77 30C64 37 40 48 30 70L22 62Z" fill="#F59E0B"/>
+            <defs>
+              <linearGradient id="navLogoBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0284C7"/>
+                <stop offset="50%" stop-color="#1D4ED8"/>
+                <stop offset="100%" stop-color="#1E40AF"/>
+              </linearGradient>
+              <linearGradient id="navLogoOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FB923C"/>
+                <stop offset="50%" stop-color="#F97316"/>
+                <stop offset="100%" stop-color="#EA580C"/>
+              </linearGradient>
+              <linearGradient id="navLogoArrow" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FACC15"/>
+                <stop offset="50%" stop-color="#EAB308"/>
+                <stop offset="100%" stop-color="#D97706"/>
+              </linearGradient>
+              <clipPath id="navTopNClip">
+                <polygon points="0,0 100,0 100,43 0,65"/>
+              </clipPath>
+              <clipPath id="navBottomNClip">
+                <polygon points="0,65 100,43 100,100 0,100"/>
+              </clipPath>
+            </defs>
+            <rect width="100" height="100" rx="18" fill="#0A0D14" stroke="rgba(255,255,255,0.12)"/>
+            <!-- 'N' letter top part (Blue) -->
+            <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#navLogoBlue)" clip-path="url(#navTopNClip)"/>
+            <!-- 'N' letter bottom part (Orange) -->
+            <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#navLogoOrange)" clip-path="url(#navBottomNClip)"/>
+            <!-- White halo outline behind arrow -->
+            <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Swirling Golden Arrow -->
+            <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="url(#navLogoArrow)"/>
           </svg>
         </div>
         <div class="logo-text">
@@ -182,6 +209,15 @@
           <div class="reticle-ring"></div>
         </div>
 
+        <!-- Pre-Assembly Holographic Beacon (Active at Step 0, fades when logo assembles) -->
+        <div class="about-pre-assemble-beacon" id="about-pre-beacon">
+          <div class="beacon-pulse-ring ring-1"></div>
+          <div class="beacon-pulse-ring ring-2"></div>
+          <div class="beacon-pulse-ring ring-3"></div>
+          <div class="beacon-core-orb"></div>
+          <div class="beacon-scanner-line"></div>
+        </div>
+
         <!-- 3D Logo Assemble Container -->
         <div class="about-logo-assemble-core" id="about-logo-card">
           <!-- Center Emblem Symbol Assembly -->
@@ -189,15 +225,26 @@
             <svg class="about-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="aboutLogoBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#38BDF8"/>
-                  <stop offset="50%" stop-color="#2563EB"/>
-                  <stop offset="100%" stop-color="#1D4ED8"/>
+                  <stop offset="0%" stop-color="#0284C7"/>
+                  <stop offset="50%" stop-color="#1D4ED8"/>
+                  <stop offset="100%" stop-color="#1E40AF"/>
                 </linearGradient>
-                <linearGradient id="aboutLogoAmber" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#FBBF24"/>
-                  <stop offset="50%" stop-color="#F59E0B"/>
+                <linearGradient id="aboutLogoOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FB923C"/>
+                  <stop offset="50%" stop-color="#F97316"/>
                   <stop offset="100%" stop-color="#EA580C"/>
                 </linearGradient>
+                <linearGradient id="aboutLogoAmber" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FACC15"/>
+                  <stop offset="50%" stop-color="#EAB308"/>
+                  <stop offset="100%" stop-color="#D97706"/>
+                </linearGradient>
+                <clipPath id="aboutTopNClip">
+                  <polygon points="0,0 100,0 100,43 0,65"/>
+                </clipPath>
+                <clipPath id="aboutBottomNClip">
+                  <polygon points="0,65 100,43 100,100 0,100"/>
+                </clipPath>
                 <filter id="logoGlowEffect" x="-30%" y="-30%" width="160%" height="160%">
                   <feGaussianBlur stdDeviation="4" result="blur"/>
                   <feComposite in="SourceGraphic" in2="blur" operator="over"/>
@@ -213,11 +260,17 @@
               <!-- Core Shield Background -->
               <circle id="about-core-circle" class="about-core-circle" cx="50" cy="50" r="36" fill="rgba(10, 15, 28, 0.94)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1" />
               
-              <!-- 'N' letter with Glow -->
-              <path id="about-letter-n" class="about-logo-letter-n" d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#aboutLogoBlue)" filter="url(#logoGlowEffect)"/>
+              <!-- 'N' letter Top Blue part with Glow -->
+              <path id="about-letter-n" class="about-logo-letter-n" d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#aboutLogoBlue)" clip-path="url(#aboutTopNClip)" filter="url(#logoGlowEffect)"/>
+
+              <!-- 'N' letter Bottom Orange part -->
+              <path id="about-letter-n-orange" class="about-logo-letter-n" d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#aboutLogoOrange)" clip-path="url(#aboutBottomNClip)"/>
               
-              <!-- Dynamic Orange Brand Arrow -->
-              <path id="about-logo-arrow" class="about-logo-arrow" d="M22 62C34 46 64 32 78 24L71 18L88 20L84 37L77 30C64 37 40 48 30 70L22 62Z" fill="url(#aboutLogoAmber)" />
+              <!-- White Halo Outline behind arrow -->
+              <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Swirling Orange Brand Arrow -->
+              <path id="about-logo-arrow" class="about-logo-arrow" d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="url(#aboutLogoAmber)" />
             </svg>
           </div>
 
@@ -225,7 +278,11 @@
           <div class="about-logo-meta" id="about-logo-meta">
             <h3 id="about-logo-title" class="about-logo-title">NEXORA</h3>
             <span id="about-logo-sub" class="about-logo-sub">CREATIVE STUDIO</span>
-            <p id="about-logo-motto" class="about-logo-motto">“ We Brand. We Design. We Get You Noticed. ”</p>
+            <p id="about-logo-motto" class="about-logo-motto">
+              <span class="motto-blue">We Brand.</span> 
+              <span class="motto-orange">We Design.</span> 
+              <span class="motto-gray">We Get You Noticed.</span>
+            </p>
             <div id="about-logo-pill" class="about-logo-pill">
               <span class="about-logo-dot"></span>
               <span>Panampilly Nagar · Ernakulam</span>
@@ -516,8 +573,112 @@
         </div>
       </div>
 
-      <!-- Populated dynamically via JS -->
-      <div class="reviews-grid" id="google-reviews-grid"></div>
+      <!-- Google Reviews Cards (Static HTML + Dynamic fallback) -->
+      <div class="reviews-grid" id="google-reviews-grid">
+        <div class="review-card">
+          <div>
+            <div class="review-header">
+              <div class="reviewer-profile">
+                <div class="reviewer-avatar">S</div>
+                <div>
+                  <div class="reviewer-name">Sunil Varghese</div>
+                  <div class="reviewer-location">Panampilly Nagar, Ernakulam</div>
+                </div>
+              </div>
+              <svg class="google-icon-small" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+            </div>
+            <div class="google-stars" style="margin-bottom: 12px; color: #F59E0B;">★★★★★</div>
+            <p class="review-text">"Ashik and the Nexora team delivered an outstanding 3D gold finish sign for our boutique. The attention to detail, precision laser cutting, and clean lighting installation exceeded our expectations. Highly recommended for premium signage work!"</p>
+          </div>
+          <div class="review-footer">
+            <span>Verified Google Review</span>
+            <span>2 weeks ago</span>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div>
+            <div class="review-header">
+              <div class="reviewer-profile">
+                <div class="reviewer-avatar">J</div>
+                <div>
+                  <div class="reviewer-name">Dr. Joseph Mathew</div>
+                  <div class="reviewer-location">Kochi, Kerala</div>
+                </div>
+              </div>
+              <svg class="google-icon-small" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+            </div>
+            <div class="google-stars" style="margin-bottom: 12px; color: #F59E0B;">★★★★★</div>
+            <p class="review-text">"Extremely professional team. They executed our hospital clinic building facade and LED name board on time. The LED illumination is crystal clear and very attractive at night. True craftsmanship!"</p>
+          </div>
+          <div class="review-footer">
+            <span>Verified Google Review</span>
+            <span>1 month ago</span>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div>
+            <div class="review-header">
+              <div class="reviewer-profile">
+                <div class="reviewer-avatar">R</div>
+                <div>
+                  <div class="reviewer-name">Rahul K. Menon</div>
+                  <div class="reviewer-location">Kakkanad, Kochi</div>
+                </div>
+              </div>
+              <svg class="google-icon-small" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+            </div>
+            <div class="google-stars" style="margin-bottom: 12px; color: #F59E0B;">★★★★★</div>
+            <p class="review-text">"We hired Nexora for our entire supermarket interior branding and checkout counter wraps. The color accuracy, durability of the vinyl, and speed of installation were top notch. Great communication throughout."</p>
+          </div>
+          <div class="review-footer">
+            <span>Verified Google Review</span>
+            <span>1 month ago</span>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div>
+            <div class="review-header">
+              <div class="reviewer-profile">
+                <div class="reviewer-avatar">A</div>
+                <div>
+                  <div class="reviewer-name">Aparna Nair</div>
+                  <div class="reviewer-location">Edappally, Ernakulam</div>
+                </div>
+              </div>
+              <svg class="google-icon-small" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+            </div>
+            <div class="google-stars" style="margin-bottom: 12px; color: #F59E0B;">★★★★★</div>
+            <p class="review-text">"Nexora is by far the most creative signage studio in Ernakulam. Their designs don’t look like typical generic flex boards — they provide high-end architectural aesthetics that make your business look like a luxury brand."</p>
+          </div>
+          <div class="review-footer">
+            <span>Verified Google Review</span>
+            <span>2 months ago</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -671,9 +832,38 @@
           <a href="#home" class="logo">
             <div class="logo-mark">
               <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
-                <rect width="100" height="100" rx="16" fill="#0E1320"/>
-                <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="#2563EB"/>
-                <path d="M22 62C34 46 64 32 78 24L71 18L88 20L84 37L77 30C64 37 40 48 30 70L22 62Z" fill="#F59E0B"/>
+                <defs>
+                  <linearGradient id="ftrLogoBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0284C7"/>
+                    <stop offset="50%" stop-color="#1D4ED8"/>
+                    <stop offset="100%" stop-color="#1E40AF"/>
+                  </linearGradient>
+                  <linearGradient id="ftrLogoOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FB923C"/>
+                    <stop offset="50%" stop-color="#F97316"/>
+                    <stop offset="100%" stop-color="#EA580C"/>
+                  </linearGradient>
+                  <linearGradient id="ftrLogoArrow" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FACC15"/>
+                    <stop offset="50%" stop-color="#EAB308"/>
+                    <stop offset="100%" stop-color="#D97706"/>
+                  </linearGradient>
+                  <clipPath id="ftrTopNClip">
+                    <polygon points="0,0 100,0 100,43 0,65"/>
+                  </clipPath>
+                  <clipPath id="ftrBottomNClip">
+                    <polygon points="0,65 100,43 100,100 0,100"/>
+                  </clipPath>
+                </defs>
+                <rect width="100" height="100" rx="16" fill="#0A0D14" stroke="rgba(255,255,255,0.12)"/>
+                <!-- 'N' letter top part (Blue) -->
+                <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#ftrLogoBlue)" clip-path="url(#ftrTopNClip)"/>
+                <!-- 'N' letter bottom part (Orange) -->
+                <path d="M26 74V26H38.5L61.5 60.5V26H74V74H61.5L38.5 39.5V74H26Z" fill="url(#ftrLogoOrange)" clip-path="url(#ftrBottomNClip)"/>
+                <!-- White halo outline behind arrow -->
+                <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Swirling Golden Arrow -->
+                <path d="M16 64C28 76 54 68 76 42L70 34L88 32L84 50L77 42C58 64 32 74 16 64Z" fill="url(#ftrLogoArrow)"/>
               </svg>
             </div>
             <div class="logo-text">

@@ -191,6 +191,7 @@ export function initPhotoWave() {
   let mouseYRel = 0; // -1 to 1
   let currentMouseDeflect = 0;
   let targetMouseDeflect = 0;
+  let isStageVisible = true;
   let animationFrameId = null;
 
   // Responsive parameters
@@ -231,8 +232,25 @@ export function initPhotoWave() {
     mouseYRel = 0;
   });
 
+  if ('IntersectionObserver' in window && stage) {
+    const stageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isStageVisible = entry.isIntersecting;
+        if (isStageVisible && !animationFrameId) {
+          render();
+        }
+      });
+    }, { threshold: 0.05 });
+    stageObserver.observe(stage);
+  }
+
   // Render Loop: Mathematical S-Curve Parametric Calculations
   function render() {
+    if (!isStageVisible) {
+      animationFrameId = null;
+      return;
+    }
+
     if (!isDragging && !isHovered) {
       targetProgress += waveParams.driftSpeed;
     }
@@ -252,39 +270,40 @@ export function initPhotoWave() {
       if (rawOffset < -totalWidth / 2) rawOffset += totalWidth;
       if (rawOffset > totalWidth / 2) rawOffset -= totalWidth;
 
-      // Normalized parameter u from -0.5 to 0.5 across the visible ribbon
-      const u = rawOffset / (stageWidth * 0.95);
+      // Normalized parameter u from -1.0 (left edge) to +1.0 (right edge) across visible stage
+      const u = rawOffset / (stageWidth * 0.55);
 
       // S-Curve Sine Wave equations
       // Angle theta covers one full cycle (-PI to +PI) across the visible span
-      const theta = u * Math.PI * 2 * waveParams.frequency;
+      const theta = u * Math.PI * waveParams.frequency;
 
       // Primary S-curve coordinates
       const x = rawOffset;
-      // Invert sign so curve matches reference: rises first (crest on left), drops in middle (trough on right), rises at end
-      const y = -Math.sin(theta) * amplitude + Math.cos(u * Math.PI) * currentMouseDeflect;
+      // Serpent wave: rises first (left crest), drops in middle (trough), rises at right crest
+      const y = -Math.sin(theta) * amplitude + Math.cos(u * Math.PI * 0.5) * currentMouseDeflect;
       const z = Math.cos(theta) * depthAmp;
 
-      // Calculate tangent slope dy/dx to rotate card naturally along the wave
+      // Tangent rotation along the serpentine curve
       const dx = 1;
-      const dy = -Math.cos(theta) * (amplitude * (Math.PI * 2 / stageWidth));
-      const rotZ = Math.atan2(dy, dx) * (180 / Math.PI) * 0.65; // Tilt following the curve flow
-      const rotY = -Math.sin(theta) * 22; // 3D Perspective yaw
-      const rotX = Math.cos(theta) * 10;  // 3D Pitch
+      const dy = -Math.cos(theta) * (amplitude * (Math.PI / (stageWidth * 0.55)));
+      const rotZ = Math.atan2(dy, dx) * (180 / Math.PI) * 0.65; // Tilt following wave curve
+      const rotY = -Math.sin(theta) * 20; // 3D Perspective yaw
+      const rotX = Math.cos(theta) * 8;   // 3D Pitch
 
-      // Scale and Opacity with smooth edge falloff
+      // Smooth edge falloff only at extreme viewport edges (|u| > 0.85)
       const distFromCenter = Math.abs(u);
-      const edgeFalloff = Math.max(0, 1 - Math.pow(distFromCenter * 1.8, 4));
-      const depthScale = 0.88 + ((z + depthAmp) / (depthAmp * 2 || 1)) * 0.24;
-      const scale = depthScale * edgeFalloff;
+      const edgeFalloff = Math.max(0, 1.0 - Math.pow(Math.max(0, distFromCenter - 0.7) / 0.35, 2.5));
+      const depthScale = 0.82 + ((z + depthAmp) / (depthAmp * 2 || 1)) * 0.32;
+      const scale = Math.max(0.4, depthScale * edgeFalloff);
 
       // Stacking order: higher z gets higher z-index (front-most)
       const zIndex = Math.round(z + 500);
 
       // Apply transforms
-      card.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), ${z.toFixed(1)}px) rotateZ(${rotZ.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      card.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateZ(${rotZ.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       card.style.zIndex = zIndex;
-      card.style.opacity = (Math.max(0.1, edgeFalloff * (0.85 + (z / depthAmp) * 0.15))).toFixed(3);
+      card.style.opacity = (edgeFalloff * (0.85 + (z / (depthAmp * 2 || 1)) * 0.25)).toFixed(3);
+      card.style.visibility = edgeFalloff > 0.02 ? 'visible' : 'hidden';
     });
 
     animationFrameId = requestAnimationFrame(render);
