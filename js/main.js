@@ -1,4 +1,4 @@
-import { initInterior3DAnimation } from './interior-3d.js';
+import { initHeroArchitecturalShowcase } from './hero-showcase.js';
 import { initPhotoWave } from './photo-wave.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initCustomCursor();
-  initInterior3DAnimation();
+  initHeroArchitecturalShowcase();
   initLogo3DShowcaseAnimation();
   initHolaOverviewAnimation();
   initWhyNexoraPillarsAnimation();
@@ -676,7 +676,7 @@ function initCustomCursor() {
 
     // Event delegation for static and dynamically rendered interactive elements
     const interactiveSelector = 'a, button, .service-card, .project-card, .pillar-card, .review-card, input, select, textarea, .filter-btn, .video-control-btn';
-    
+
     document.addEventListener('mouseover', (e) => {
       if (e.target.closest(interactiveSelector)) {
         follower.classList.add('hovered');
@@ -854,7 +854,7 @@ function initServicesData() {
   requestAnimationFrame(update3DPositions);
 }
 
-window.openServiceModal = function(serviceId) {
+window.openServiceModal = function (serviceId) {
   const service = SERVICES_DATA.find(s => s.id === serviceId);
   if (!service) return;
 
@@ -948,8 +948,8 @@ function renderProjects(filter) {
   const grid = document.getElementById('portfolio-grid');
   if (!grid) return;
 
-  const filtered = filter === 'all' 
-    ? PROJECTS_DATA 
+  const filtered = filter === 'all'
+    ? PROJECTS_DATA
     : PROJECTS_DATA.filter(p => p.category === filter || (filter === 'featured' && p.featured));
 
   const isMobile = window.innerWidth <= 680;
@@ -997,7 +997,7 @@ function renderProjects(filter) {
   }
 }
 
-window.openProjectModal = function(projectId) {
+window.openProjectModal = function (projectId) {
   const project = PROJECTS_DATA.find(p => p.id === projectId);
   if (!project) return;
 
@@ -1053,7 +1053,7 @@ window.openProjectModal = function(projectId) {
   window.location.hash = `project-${projectId}`;
 };
 
-window.closeAllModals = function() {
+window.closeAllModals = function () {
   document.querySelectorAll('.modal-backdrop').forEach(modal => {
     modal.classList.remove('active');
   });
@@ -1156,7 +1156,7 @@ function initContactForm() {
     }
 
     const compiledText = `Hello Nexora Creative Studio,%0A%0AMy Name: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AService Needed: ${encodeURIComponent(service)}%0AProject Details: ${encodeURIComponent(message)}`;
-    
+
     // Redirect to direct WhatsApp with compiled inquiry
     window.open(`https://wa.me/919656885973?text=${compiledText}`, '_blank');
 
@@ -1212,7 +1212,7 @@ function initLogo3DShowcaseAnimation() {
   const core = document.getElementById('about-logo-card');
   const symbolWrap = document.getElementById('about-logo-symbol-wrap');
   const metaWrap = document.getElementById('about-logo-meta-wrap');
-  
+
   // 1. Letter "N"
   const letterN = document.getElementById('about-letter-n');
   const letterNOrange = document.getElementById('about-letter-n-orange');
@@ -1349,7 +1349,7 @@ function initLogo3DShowcaseAnimation() {
         applyStep(currentStep);
       }
     },
-    ...( ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? {} : {
+    ...(('ontouchstart' in window || navigator.maxTouchPoints > 0) ? {} : {
       snap: {
         snapTo: [0, 0.25, 0.5, 0.75, 1.0],
         duration: { min: 0.3, max: 0.6 },
