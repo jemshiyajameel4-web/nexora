@@ -112,17 +112,13 @@
                 <polygon points="-10,76 110,48 110,110 -10,110" />
               </clipPath>
             </defs>
-            <rect width="100" height="100" rx="18" fill="#0A0D14" stroke="rgba(255,255,255,0.12)" />
+            <rect width="100" height="100" rx="18" fill="#2F2924" stroke="rgba(178,138,87,0.35)" />
             <!-- 'N' letter Top part (Blue) -->
             <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#navLogoBlue)"
               clip-path="url(#navTopNClip)" />
             <!-- 'N' letter Bottom part (Orange) -->
             <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#navLogoOrange)"
               clip-path="url(#navBottomNClip)" />
-            <!-- White halo outline behind arrow -->
-            <path
-              d="M2 77C5 87 20 86 40 74C60 62 76 46 83 38L72 28L98 16L88 54L80 41C73 50 57 66 37 78C21 88 7 87 2 77Z"
-              fill="#FFFFFF" />
             <!-- Swirling Golden Arrow Body -->
             <path d="M4 76C7 85 21 84 40 72C59 60 75 44 82 37L72 28L98 16L80 41C73 49 57 64 37 76C21 86 8 85 4 76Z"
               fill="url(#navLogoArrow)" />
@@ -173,59 +169,10 @@
       <div class="hero-blueprint-grid" aria-hidden="true"></div>
       <div class="hero-light-sweep" aria-hidden="true"></div>
 
-      <!-- Interactive 4-Stage Floating Architectural Objects Showcase -->
-      <div class="hero-arch-showcase" aria-hidden="true">
-        <!-- Object 1: Precision Drafting Compass & Triangle (Top-Left) -->
-        <div class="hero-arch-obj-wrap obj-compass" data-depth="0.045">
-          <div class="hero-obj-halo halo-amber"></div>
-          <div class="hero-obj-ring ring-dashed"></div>
-          <div class="hero-obj-img-container">
-            <img src="assets/images/hero-cutout-compass.png" alt="Architectural Drafting Compass & Ruler" class="hero-obj-img" loading="eager" decoding="async" />
-          </div>
-          <div class="hero-obj-hud-tag">
-            <span class="hud-step">01 · BLUEPRINT</span>
-            <span class="hud-name">Precision Drafting</span>
-          </div>
-        </div>
-
-        <!-- Object 2: Parametric 3D CAD Wireframe House (Top-Right) -->
-        <div class="hero-arch-obj-wrap obj-wireframe" data-depth="0.065">
-          <div class="hero-obj-halo halo-cyan"></div>
-          <div class="hero-obj-ring ring-solid"></div>
-          <div class="hero-obj-img-container">
-            <img src="assets/images/hero-cutout-wireframe.png" alt="Parametric 3D CAD Wireframe Model" class="hero-obj-img" loading="eager" decoding="async" />
-          </div>
-          <div class="hero-obj-hud-tag">
-            <span class="hud-step">02 · 3D CAD</span>
-            <span class="hud-name">Parametric Wireframe</span>
-          </div>
-        </div>
-
-        <!-- Object 3: Commercial BIM Facade & Luminous Signage (Bottom-Left) -->
-        <div class="hero-arch-obj-wrap obj-facade" data-depth="0.05">
-          <div class="hero-obj-halo halo-gold"></div>
-          <div class="hero-obj-ring ring-crosshair"></div>
-          <div class="hero-obj-img-container">
-            <img src="assets/images/hero-cutout-facade.png" alt="3D Commercial BIM Building Facade" class="hero-obj-img" loading="eager" decoding="async" />
-          </div>
-          <div class="hero-obj-hud-tag">
-            <span class="hud-step">03 · BIM FACADE</span>
-            <span class="hud-name">3D Brand Architecture</span>
-          </div>
-        </div>
-
-        <!-- Object 4: Laser-Cut Timber Geodesic Dome & Bridge (Bottom-Right) -->
-        <div class="hero-arch-obj-wrap obj-dome" data-depth="0.055">
-          <div class="hero-obj-halo halo-bronze"></div>
-          <div class="hero-obj-ring ring-dashed"></div>
-          <div class="hero-obj-img-container">
-            <img src="assets/images/hero-cutout-dome.png" alt="Laser-Cut Wooden Scale Model Dome & Bridge" class="hero-obj-img" loading="eager" decoding="async" />
-          </div>
-          <div class="hero-obj-hud-tag">
-            <span class="hud-step">04 · CRAFT</span>
-            <span class="hud-name">Physical Scale Models</span>
-          </div>
-        </div>
+      <!-- 7-Second Photorealistic Architectural Timelapse Engine (Locked Perspective) -->
+      <div class="hero-timelapse-container" aria-label="7-second cinematic interior assembly timelapse">
+        <canvas id="timelapse-canvas" class="timelapse-canvas"></canvas>
+        <div class="timelapse-vignette"></div>
       </div>
 
       <div class="hero-overlay"></div>
@@ -239,8 +186,8 @@
         </div>
 
         <h1 class="hero-headline">
-          Spaces & Identities <br />
-          <span class="gradient-text">Designed to Command Attention.</span>
+          <span class="hero-headline-top">Spaces &amp; Identities</span>
+          <span class="hero-headline-accent">Designed to <em>Command Attention.</em></span>
         </h1>
 
         <p class="hero-subheadline">
@@ -248,13 +195,6 @@
           reception lettering, and complete retail interior environments in Ernakulam with precision craftsmanship and
           cutting-edge design.
         </p>
-
-        <div class="hero-feature-tags">
-          <span class="hero-tag"><i class="tag-icon">✦</i> 3D Architectural Signage</span>
-          <span class="hero-tag"><i class="tag-icon">✦</i> Luminous LED Displays</span>
-          <span class="hero-tag"><i class="tag-icon">✦</i> Luxury Reception Lettering</span>
-          <span class="hero-tag"><i class="tag-icon">✦</i> Commercial Facade Design</span>
-        </div>
 
         <div class="hero-cta-group">
           <a href="#portfolio" class="btn btn-primary">
@@ -362,10 +302,6 @@
                 <clipPath id="aboutBottomNClip">
                   <polygon points="-10,76 110,48 110,110 -10,110" />
                 </clipPath>
-                <filter id="logoGlowEffect" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
               </defs>
 
               <!-- Outer Rotating Dashed Precision Ring -->
@@ -380,19 +316,14 @@
               <circle id="about-core-circle" class="about-core-circle" cx="50" cy="50" r="36"
                 fill="rgba(10, 15, 28, 0.6)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
 
-              <!-- 'N' letter Top Blue part with Glow -->
+              <!-- 'N' letter Top Blue part -->
               <path id="about-letter-n" class="about-logo-letter-n" d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z"
-                fill="url(#aboutLogoBlue)" clip-path="url(#aboutTopNClip)" filter="url(#logoGlowEffect)" />
+                fill="url(#aboutLogoBlue)" clip-path="url(#aboutTopNClip)" />
 
               <!-- 'N' letter Bottom Orange part -->
               <path id="about-letter-n-orange" class="about-logo-letter-n"
                 d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#aboutLogoOrange)"
                 clip-path="url(#aboutBottomNClip)" />
-
-              <!-- White Halo Outline behind arrow -->
-              <path
-                d="M2 77C5 87 20 86 40 74C60 62 76 46 83 38L72 28L98 16L88 54L80 41C73 50 57 66 37 78C21 88 7 87 2 77Z"
-                fill="#FFFFFF" />
 
               <!-- Swirling Orange Brand Arrow -->
               <path id="about-logo-arrow" class="about-logo-arrow"
@@ -939,7 +870,7 @@
             <span class="eyebrow">Direct Studio Channels</span>
             <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 12px;">Panampilly Nagar Studio
             </h3>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7;">
+            <p style="font-size: 0.95rem; line-height: 1.7;">
               Visit our design studio in Ernakulam or reach out directly via phone or WhatsApp for prompt project
               consultations.
             </p>
@@ -1103,17 +1034,13 @@
                     <polygon points="-10,76 110,48 110,110 -10,110" />
                   </clipPath>
                 </defs>
-                <rect width="100" height="100" rx="16" fill="#0A0D14" stroke="rgba(255,255,255,0.12)" />
+                <rect width="100" height="100" rx="16" fill="#2F2924" stroke="rgba(178,138,87,0.35)" />
                 <!-- 'N' letter Top part (Blue) -->
                 <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#ftrLogoBlue)"
                   clip-path="url(#ftrTopNClip)" />
                 <!-- 'N' letter Bottom part (Orange) -->
                 <path d="M18 82V18H36L64 60.5V18H82V82H64L36 39.5V82H18Z" fill="url(#ftrLogoOrange)"
                   clip-path="url(#ftrBottomNClip)" />
-                <!-- White halo outline behind arrow -->
-                <path
-                  d="M2 77C5 87 20 86 40 74C60 62 76 46 83 38L72 28L98 16L88 54L80 41C73 50 57 66 37 78C21 88 7 87 2 77Z"
-                  fill="#FFFFFF" />
                 <!-- Swirling Golden Arrow -->
                 <path d="M4 76C7 85 21 84 40 72C59 60 75 44 82 37L72 28L98 16L80 41C73 49 57 64 37 76C21 86 8 85 4 76Z"
                   fill="url(#ftrLogoArrow)" />
@@ -1163,7 +1090,7 @@
         <div class="footer-col">
           <h4>Studio Contact</h4>
           <ul class="footer-links">
-            <li style="color: var(--text-secondary); line-height: 1.5;">LIG - 654, Elders Forum Road, Panampilly Nagar,
+            <li style="line-height: 1.5;">LIG - 654, Elders Forum Road, Panampilly Nagar,
               Ernakulam, Kerala</li>
             <li><a href="tel:+919656885973">Call: +91 9656885973</a></li>
             <li><a href="https://wa.me/919656885973" target="_blank">WhatsApp: 9656885973</a></li>

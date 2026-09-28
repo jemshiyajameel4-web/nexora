@@ -1,4 +1,4 @@
-import { initHeroArchitecturalShowcase } from './hero-showcase.js';
+import { initHeroTimelapse } from './hero-timelapse.js';
 import { initPhotoWave } from './photo-wave.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initCustomCursor();
-  initHeroArchitecturalShowcase();
+  initHeroTimelapse();
   initLogo3DShowcaseAnimation();
   initHolaOverviewAnimation();
   initWhyNexoraPillarsAnimation();
