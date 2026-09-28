@@ -764,16 +764,14 @@ function initServicesData() {
       // Normalized distance from center (-1 to 1 across visible viewport)
       const normDist = offset / (stageWidth * 0.48);
 
-      // Jesper Landberg Curved Arc (Bold, clearly readable, prominent!)
-      const rotateY = normDist * -18; // Subtle 3D arc
-      const translateZ = -Math.abs(normDist) * 75; // Gentle depth
-      const scale = Math.max(0.82, 1 - Math.abs(normDist) * 0.12);
-      const opacity = Math.max(0.35, 1 - Math.abs(normDist) * 0.35);
-      const brightness = Math.max(0.72, 1 - Math.abs(normDist) * 0.25);
+      // Subtle, clean 3D perspective without blur or heavy opacity fade
+      const rotateY = normDist * -8;
+      const translateZ = -Math.abs(normDist) * 20;
+      const scale = Math.max(0.92, 1 - Math.abs(normDist) * 0.08);
 
       card.style.transform = `translate(-50%, -50%) translate3d(${offset.toFixed(1)}px, 0px, ${translateZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-      card.style.opacity = opacity.toFixed(3);
-      card.style.filter = `brightness(${brightness.toFixed(3)})`;
+      card.style.opacity = '1';
+      card.style.filter = 'none';
     });
 
     requestAnimationFrame(update3DPositions);

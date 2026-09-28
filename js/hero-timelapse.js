@@ -101,7 +101,7 @@ export function initHeroTimelapse() {
     const imgW = images[0].naturalWidth || 1920;
     const imgH = images[0].naturalHeight || 1080;
 
-    // Cover scale calculation
+    // Full fit (cover) scale calculation to fill the entire screen seamlessly
     const scale = Math.max(w / imgW, h / imgH);
     const renderW = imgW * scale;
     const renderH = imgH * scale;
@@ -142,7 +142,7 @@ export function initHeroTimelapse() {
       wipeProgress = 1.0;
     }
 
-    // 1. Draw base image
+    // 1. Draw base image (Full-fit cover)
     ctx.globalAlpha = 1.0;
     ctx.drawImage(fromImg, offsetX, offsetY, renderW, renderH);
 
