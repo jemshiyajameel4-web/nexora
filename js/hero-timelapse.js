@@ -1,16 +1,17 @@
 import { gsap } from 'gsap';
 
 /**
- * NEXORA CREATIVE STUDIO — 7-SECOND ARCHITECTURAL TIMELAPSE ENGINE
- * Photorealistic cinematic assembly of the luxury interior from a raw white architectural shell.
+ * NEXORA CREATIVE STUDIO — 5-SECOND ARCHITECTURAL TIMELAPSE ENGINE
+ * Photorealistic cinematic assembly of the luxury interior across 6 stages from a raw white architectural shell.
  * Locked 100% camera perspective, focal length, and architectural geometry.
  *
- * Sequence Breakdown (7.0 Seconds Total):
- * 0.0s - 1.2s : Empty white shell -> Architectural finishes (marble floor + timber fluted walls)
- * 1.2s - 2.8s : Millwork installation (stone reception desk & fixed cabinetry slide into place)
- * 2.8s - 4.6s : Illumination activation (chandelier, vertical LED cove strips ignite sequentially)
- * 4.6s - 6.0s : Luxury furniture & branding signage (sofas, armchairs, gold 3D letters materialize)
- * 6.0s - 7.0s : Final atmospheric polish & ambient evening glow reflections
+ * Sequence Breakdown (5.0 Seconds Total):
+ * 0.0s - 0.85s : Stage 01 · Raw white shell -> Architectural finishes (herringbone floor + timber slat walls)
+ * 0.85s - 1.70s: Stage 02 · Millwork installation (curved fluted marble reception desk)
+ * 1.70s - 2.55s: Stage 03 · 3D Signage & chandelier (mirror gold NEXORA letters + brass pendant lighting)
+ * 2.55s - 3.40s: Stage 04 · Complete luxury interior (bouclé lounge sofa, stone table, olive planter)
+ * 3.40s - 4.25s: Stage 05 · Twilight evening transition (warm halo letter glow & night skyline)
+ * 4.25s - 5.00s: Stage 06 · Final atmospheric polish & ambient evening glow pulse before seamless loop
  */
 
 export function initHeroTimelapse() {
@@ -32,12 +33,14 @@ export function initHeroTimelapse() {
   const stageBadges = container.querySelectorAll('.tl-stage-badge');
   const stageStatusEl = container.querySelector('.tl-status-text');
 
-  // Keyframe image sources
+  // Keyframe image sources (6-Stage Architectural Transformation)
   const stageSources = [
-    'assets/images/arch-timelapse-0-shell.jpg',      // Stage 0: White shell (0.0s)
-    'assets/images/arch-timelapse-1-finishes.jpg',   // Stage 1: Wall finishes & marble floor (1.5s)
-    'assets/images/arch-timelapse-2-millwork.jpg',   // Stage 2: Millwork & desk installed (3.0s)
-    'assets/images/arch-timelapse-3-complete.jpg'    // Stage 3: Complete luxury interior (5.0s - 7.0s)
+    'assets/images/arch-timelapse-0-shell.jpg',      // Stage 0: White shell (0.0s - 1.5s)
+    'assets/images/arch-timelapse-1-finishes.jpg',   // Stage 1: Wall finishes & herringbone floor (1.5s - 3.0s)
+    'assets/images/arch-timelapse-2-millwork.jpg',   // Stage 2: Fluted reception desk (3.0s - 4.5s)
+    'assets/images/arch-timelapse-3-signage.jpg',    // Stage 3: 3D Gold signage & chandelier (4.5s - 6.0s)
+    'assets/images/arch-timelapse-4-complete.jpg',   // Stage 4: Furnished luxury interior (6.0s - 7.5s)
+    'assets/images/arch-timelapse-5-evening.jpg'     // Stage 5: Twilight / Evening illumination (7.5s - 9.0s)
   ];
 
   const images = [];
@@ -45,22 +48,24 @@ export function initHeroTimelapse() {
   let isReady = false;
 
   // Timelapse State
-  const TOTAL_DURATION = 7.0; // 7 seconds
+  const TOTAL_DURATION = 5.0; // 5.0 seconds total animation loop across all 6 stages
   let currentTime = 0;
   let isPlaying = true;
   let isUserScrubbing = false;
   let lastTimestamp = null;
   let animFrameId = null;
 
-  // Stage description markers
+  // Stage description markers (Calibrated for 5.0s sequence)
   const STAGES = [
-    { start: 0.0, end: 1.2, name: '01 · Raw White Shell', desc: 'Empty architectural envelope with natural perimeter glazing' },
-    { start: 1.2, end: 2.8, name: '02 · Finishes & Slats', desc: 'Dark polished marble floor & timber slat wall paneling' },
-    { start: 2.8, end: 4.6, name: '03 · Millwork & Illumination', desc: 'Custom stone reception desk & warm vertical LED cove lighting' },
-    { start: 4.6, end: 7.0, name: '04 · Complete Luxury Space', desc: 'Lounge seating, mirror gold 3D signage & atmospheric evening glow' }
+    { start: 0.0, end: 0.85, name: '01 · Raw White Shell', desc: 'Empty architectural envelope with natural perimeter glazing' },
+    { start: 0.85, end: 1.70, name: '02 · Finishes & Slats', desc: 'Light oak herringbone floor & vertical acoustic timber slat wall panels' },
+    { start: 1.70, end: 2.55, name: '03 · Architectural Millwork', desc: 'Custom fluted reception desk & Calacatta marble counter installation' },
+    { start: 2.55, end: 3.40, name: '04 · 3D Signage & Lighting', desc: 'Illuminated mirror-gold NEXORA letters & minimalist geometric brass chandelier' },
+    { start: 3.40, end: 4.25, name: '05 · Luxury Furnished Interior', desc: 'Bespoke bouclé curved sofa, travertine stone table & natural olive planter' },
+    { start: 4.25, end: 5.00, name: '06 · Twilight & Night Ambience', desc: 'Warm halo letter glow, amber chandelier illumination & evening city skyline' }
   ];
 
-  // Preload all 4 keyframe images
+  // Preload all 6 keyframe images
   stageSources.forEach((src, idx) => {
     const img = new Image();
     img.src = src;
@@ -90,7 +95,7 @@ export function initHeroTimelapse() {
 
   window.addEventListener('resize', resizeCanvas);
 
-  // Core Render Function: Photorealistic Blend between keyframes with architectural reveal effects
+  // Core Render Function: Photorealistic Blend between 6 keyframes with architectural reveal effects
   function renderFrame(timeSec) {
     if (!isReady || !ctx) return;
 
@@ -98,8 +103,8 @@ export function initHeroTimelapse() {
     const h = canvas.height;
 
     // Source image dimensions (all are 16:9 widescreen)
-    const imgW = images[0].naturalWidth || 1920;
-    const imgH = images[0].naturalHeight || 1080;
+    const imgW = images[0].naturalWidth || 1376;
+    const imgH = images[0].naturalHeight || 768;
 
     // Full fit (cover) scale calculation to fill the entire screen seamlessly
     const scale = Math.max(w / imgW, h / imgH);
@@ -108,36 +113,44 @@ export function initHeroTimelapse() {
     const offsetX = (w - renderW) / 2;
     const offsetY = (h - renderH) / 2;
 
-    // Normalized progress [0..1]
-    const p = Math.max(0, Math.min(timeSec / TOTAL_DURATION, 1));
-
-    // Determine current keyframe indices and transition factor
-    // Timeline intervals:
-    // 0.0s -> 1.5s: Stage 0 -> Stage 1 (Architectural finishes appear)
-    // 1.5s -> 3.5s: Stage 1 -> Stage 2 (Millwork & lighting appear)
-    // 3.5s -> 5.5s: Stage 2 -> Stage 3 (Loose furniture & 3D signage appear)
-    // 5.5s -> 7.0s: Stage 3 holds with subtle lighting pulse & evening ambience
+    // Determine current keyframe indices and transition factor across 6 stages (5.0s Total)
     let fromImg, toImg, blendFactor;
     let wipeProgress = 0;
 
-    if (timeSec < 1.5) {
+    if (timeSec < 0.85) {
+      // Stage 0 -> Stage 1: Raw Shell to Finishes (0.0s - 0.85s)
       fromImg = images[0];
       toImg = images[1];
-      blendFactor = timeSec / 1.5;
+      blendFactor = timeSec / 0.85;
       wipeProgress = easeInOutCubic(blendFactor);
-    } else if (timeSec < 3.5) {
+    } else if (timeSec < 1.70) {
+      // Stage 1 -> Stage 2: Finishes to Millwork Desk (0.85s - 1.70s)
       fromImg = images[1];
       toImg = images[2];
-      blendFactor = (timeSec - 1.5) / 2.0;
+      blendFactor = (timeSec - 0.85) / 0.85;
       wipeProgress = easeInOutCubic(blendFactor);
-    } else if (timeSec < 5.5) {
+    } else if (timeSec < 2.55) {
+      // Stage 2 -> Stage 3: Millwork to 3D Signage & Chandelier (1.70s - 2.55s)
       fromImg = images[2];
       toImg = images[3];
-      blendFactor = (timeSec - 3.5) / 2.0;
+      blendFactor = (timeSec - 1.70) / 0.85;
+      wipeProgress = easeInOutCubic(blendFactor);
+    } else if (timeSec < 3.40) {
+      // Stage 3 -> Stage 4: Signage to Complete Furnished Showroom (2.55s - 3.40s)
+      fromImg = images[3];
+      toImg = images[4];
+      blendFactor = (timeSec - 2.55) / 0.85;
+      wipeProgress = easeInOutCubic(blendFactor);
+    } else if (timeSec < 4.25) {
+      // Stage 4 -> Stage 5: Daylight Showroom to Evening Glow & Halo Illumination (3.40s - 4.25s)
+      fromImg = images[4];
+      toImg = images[5];
+      blendFactor = (timeSec - 3.40) / 0.85;
       wipeProgress = easeInOutCubic(blendFactor);
     } else {
-      fromImg = images[3];
-      toImg = images[3];
+      // Stage 5 Hold & Ambient Pulse (4.25s - 5.00s)
+      fromImg = images[5];
+      toImg = images[5];
       blendFactor = 1.0;
       wipeProgress = 1.0;
     }
@@ -175,10 +188,10 @@ export function initHeroTimelapse() {
       ctx.restore();
     }
 
-    // 3. Subtle ambient glow pulse during completion stage (5.5s - 7.0s)
-    if (timeSec >= 5.5) {
-      const pulse = Math.sin((timeSec - 5.5) * Math.PI / 1.5) * 0.08;
-      const glowGrad = ctx.createRadialGradient(w * 0.7, h * 0.4, 50, w * 0.7, h * 0.4, w * 0.6);
+    // 3. Subtle ambient glow pulse during completion & evening stage (4.25s - 5.00s)
+    if (timeSec >= 4.25) {
+      const pulse = Math.sin((timeSec - 4.25) * Math.PI / 0.75) * 0.08;
+      const glowGrad = ctx.createRadialGradient(w * 0.75, h * 0.38, 40, w * 0.75, h * 0.38, w * 0.55);
       glowGrad.addColorStop(0, `rgba(245, 158, 11, ${0.12 + pulse})`);
       glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = glowGrad;

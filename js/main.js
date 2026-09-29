@@ -3,8 +3,10 @@ import { initPhotoWave } from './photo-wave.js';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
+
+if (typeof window !== 'undefined' && window.gsap && window.ScrollTrigger) {
+  window.gsap.registerPlugin(window.ScrollTrigger);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCustomCursor();
   initHeroTimelapse();
   initLogo3DShowcaseAnimation();
-  initHolaOverviewAnimation();
+  initHorizontalShowcase();
   initWhyNexoraPillarsAnimation();
   initServicesData();
   initProjectsData();
@@ -1326,7 +1328,7 @@ function initLogo3DShowcaseAnimation() {
   const stepTrigger = ScrollTrigger.create({
     trigger: pinTrack,
     start: 'top top',
-    end: isMobileLogo ? '+=100%' : '+=300%',
+    end: isMobileLogo ? '+=100%' : '+=250%',
     pin: true,
     pinSpacing: true,
     anticipatePin: 1,
@@ -1346,15 +1348,7 @@ function initLogo3DShowcaseAnimation() {
         currentStep = targetStep;
         applyStep(currentStep);
       }
-    },
-    ...(('ontouchstart' in window || navigator.maxTouchPoints > 0) ? {} : {
-      snap: {
-        snapTo: [0, 0.25, 0.5, 0.75, 1.0],
-        duration: { min: 0.3, max: 0.6 },
-        ease: 'power2.inOut',
-        delay: 0.02
-      }
-    })
+    }
   });
 
 
@@ -1711,174 +1705,86 @@ function initImageScrollParallax() {
     });
   }
 
-  function loop() {
-    // Animate Columns
+  let isTicking = false;
+  function updateAndRender() {
+    updateTargets();
     columnItems.forEach(col => {
       if (!col.isVisible) return;
-      col.currentY += (col.targetY - col.currentY) * 0.1;
-      col.el.style.transform = `translate3d(0, ${col.currentY.toFixed(2)}px, 0)`;
+      col.el.style.transform = `translate3d(0, ${col.targetY.toFixed(1)}px, 0)`;
     });
 
-    // Animate Images
     imageItems.forEach(item => {
       if (!item.isVisible) return;
-      item.currentY += (item.targetY - item.currentY) * 0.12;
-      item.img.style.transform = `translate3d(0, ${-item.currentY.toFixed(2)}px, 0) scale(1.08)`;
+      item.img.style.transform = `translate3d(0, ${-item.targetY.toFixed(1)}px, 0) scale(1.05)`;
     });
-
-    requestAnimationFrame(loop);
+    isTicking = false;
   }
 
-  window.addEventListener('scroll', updateTargets, { passive: true });
+  function requestTick() {
+    if (!isTicking) {
+      requestAnimationFrame(updateAndRender);
+      isTicking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
   window.addEventListener('resize', () => {
     refreshItems();
-    updateTargets();
+    requestTick();
   }, { passive: true });
 
-  updateTargets();
-  loop();
+  refreshItems();
+  requestTick();
 }
 
 /* ===================================================================
-   PINNED DISCRETE STEP-BY-STEP SCROLL-CONTROLLED STORYTELLING ENGINE
-   - GSAP ScrollTrigger with pin: true and scrub: false
-   - Physically locks viewport to section until all 5 stages complete
-   - Discrete Wheel & Touch Gesture state machine (Stage 0 -> 1 -> 2 -> 3 -> 4)
-   - Debounced isAnimating lock completely prevents stage skipping
-   - Exact bi-directional reverse scroll support
+   HORIZONTAL SCROLL ARCHITECTURAL SHOWCASE SECTION
+   - Smooth vertical-to-horizontal pinning using native GSAP ScrollTrigger
+   - Seamless left-to-right glide across all 4 cards
+   - 100% reliable on desktop & mobile with zero event hijacking
    =================================================================== */
-function initHolaOverviewAnimation() {
+function initHorizontalShowcase() {
   const section = document.getElementById('overview');
-  if (!section) return;
+  const track = document.getElementById('horizontal-track');
+  if (!section || !track) return;
 
-  const t1 = document.getElementById('story-text-1');
-  const t2 = document.getElementById('story-text-2');
-  const t3 = document.getElementById('story-text-3');
-  const t4 = document.getElementById('story-text-4');
+  const getScrollDistance = () => {
+    return Math.max(0, track.scrollWidth - window.innerWidth + 80);
+  };
 
-  const p1 = document.getElementById('story-photo-1');
-  const p2 = document.getElementById('story-photo-2');
-  const p3 = document.getElementById('story-photo-3');
-  const p4 = document.getElementById('story-photo-4');
+  const isMobile = window.innerWidth <= 768;
 
-  if (!t1 || !t2 || !t3 || !t4 || !p1 || !p2 || !p3 || !p4) return;
-
-  const texts = [t1, t2, t3, t4];
-  const photos = [p1, p2, p3, p4];
-
-  let currentStage = -1;
-
-  function resetAll() {
-    gsap.set(t1, { opacity: 1, y: 0, scale: 1, pointerEvents: 'auto' });
-    gsap.set([t2, t3, t4], { opacity: 0, y: 25, scale: 0.96, pointerEvents: 'none' });
-    gsap.set([p1, p3], { opacity: 0, x: -30, scale: 0.94, pointerEvents: 'none' });
-    gsap.set([p2, p4], { opacity: 0, x: 30, scale: 0.94, pointerEvents: 'none' });
-    currentStage = 1;
-  }
-
-  resetAll();
-
-  function goToStage(targetStage) {
-    if (targetStage === currentStage) return;
-    currentStage = targetStage;
-    const dur = 0.5;
-
-    // Active text index:
-    // Stage 1 & 2 -> t1 (0), Stage 3 & 4 -> t2 (1), Stage 5 & 6 -> t3 (2), Stage 7 & 8 -> t4 (3)
-    const activeTextIndex = Math.floor((targetStage - 1) / 2);
-
-    texts.forEach((text, i) => {
-      if (i === activeTextIndex) {
-        gsap.to(text, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: dur,
-          ease: 'power2.out',
-          pointerEvents: 'auto',
-          overwrite: 'auto'
-        });
-      } else {
-        gsap.to(text, {
-          opacity: 0,
-          y: i < activeTextIndex ? -25 : 25,
-          scale: 0.96,
-          duration: dur * 0.7,
-          ease: 'power2.in',
-          pointerEvents: 'none',
-          overwrite: 'auto'
-        });
-      }
-    });
-
-    // Active photo index:
-    // Stage 1 -> none (-1), Stage 2 -> p1 (0), Stage 3 -> none (-1), Stage 4 -> p2 (1),
-    // Stage 5 -> none (-1), Stage 6 -> p3 (2), Stage 7 -> none (-1), Stage 8 -> p4 (3)
-    const activePhotoIndex = (targetStage % 2 === 0) ? (targetStage / 2) - 1 : -1;
-
-    photos.forEach((photo, i) => {
-      const isLeft = (i === 0 || i === 2);
-      if (i === activePhotoIndex) {
-        gsap.to(photo, {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          scale: 1,
-          duration: dur,
-          ease: 'power2.out',
-          pointerEvents: 'auto',
-          overwrite: 'auto'
-        });
-      } else {
-        gsap.to(photo, {
-          opacity: 0,
-          x: isLeft ? -30 : 30,
-          scale: 0.94,
-          duration: dur * 0.7,
-          ease: 'power2.in',
-          pointerEvents: 'none',
-          overwrite: 'auto'
-        });
-      }
-    });
-  }
-
-  const isMobileOverview = window.innerWidth <= 768;
-
-  // ScrollTrigger progress tracking mapped across 8 stages (1 through 8)
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top top',
-    end: isMobileOverview ? '+=2800' : '+=4000',
-    pin: true,
-    pinSpacing: true,
-    anticipatePin: 1,
-    onUpdate: (self) => {
-      const p = self.progress;
-      const targetStage = Math.min(8, Math.max(1, Math.floor(p * 8) + 1));
-      goToStage(targetStage);
+  // Kill existing overview triggers if any
+  ScrollTrigger.getAll().forEach(st => {
+    if (st.vars && st.vars.trigger === section) {
+      st.kill();
     }
   });
 
-  // Mouse Parallax on desktop
-  const isMobile = window.innerWidth <= 768;
-  if (!isMobile) {
-    section.addEventListener('mousemove', (e) => {
-      const rect = section.getBoundingClientRect();
-      const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      pin: true,
+      anticipatePin: 1,
+      scrub: 0.8,
+      start: 'top top',
+      end: () => `+=${getScrollDistance() + (isMobile ? 350 : 700)}`,
+      invalidateOnRefresh: true
+    }
+  });
 
-      [p1, p3].forEach(el => {
-        if (gsap.getProperty(el, 'opacity') > 0.4) {
-          gsap.to(el, { x: relX * 18, y: relY * 14, duration: 0.6, ease: 'power1.out' });
-        }
-      });
+  // When scrolling DOWN vertically, move track to the LEFT
+  // When scrolling UP vertically, move track back to the RIGHT
+  tl.to(track, {
+    x: () => -getScrollDistance(),
+    ease: 'none'
+  });
 
-      [p2, p4].forEach(el => {
-        if (gsap.getProperty(el, 'opacity') > 0.4) {
-          gsap.to(el, { x: -relX * 20, y: -relY * 16, duration: 0.6, ease: 'power1.out' });
-        }
-      });
-    }, { passive: true });
-  }
+  // Refresh ScrollTrigger when images inside track finish loading
+  const trackImgs = track.querySelectorAll('img');
+  trackImgs.forEach(img => {
+    if (!img.complete) {
+      img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+    }
+  });
 }

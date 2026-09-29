@@ -33,9 +33,7 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- GSAP for Smooth Scroll & Entrance Animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Main Script (Includes GSAP & ScrollTrigger Bundled) -->
 
   <!-- Main Script -->
   <script type="module" src="/js/main.js"></script>
@@ -169,8 +167,8 @@
       <div class="hero-blueprint-grid" aria-hidden="true"></div>
       <div class="hero-light-sweep" aria-hidden="true"></div>
 
-      <!-- 7-Second Photorealistic Architectural Timelapse Engine (Locked Perspective) -->
-      <div class="hero-timelapse-container" aria-label="7-second cinematic interior assembly timelapse">
+      <!-- 5-Second Photorealistic Architectural 6-Stage Timelapse Engine (Locked Perspective) -->
+      <div class="hero-timelapse-container" aria-label="5-second cinematic 6-stage interior assembly timelapse">
         <canvas id="timelapse-canvas" class="timelapse-canvas"></canvas>
         <div class="timelapse-vignette"></div>
       </div>
@@ -204,14 +202,6 @@
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
-          </a>
-          <a href="https://wa.me/919656885973?text=Hello%20Nexora%20Creative%20Studio%2C%20I'm%20interested%20in%20discussing%20a%20branding%20%2F%20signage%20project."
-            target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path
-                d="M19.05 4.91A9.816 9.816 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01zm-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.23 8.23zm4.51-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.65.81-.8 1-.15.19-.3.21-.55.08-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.43s-.56-1.35-.77-1.85c-.2-.49-.41-.42-.56-.43h-.48c-.16 0-.43.06-.66.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1 2.55.12.17 1.74 2.66 4.21 3.73.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.3z" />
-            </svg>
-            Chat on WhatsApp
           </a>
         </div>
 
@@ -469,72 +459,107 @@
   </section>
 
   <!-- ===================================================================
-       HOLA DESIGN EDITORIAL ARCHITECTURAL OVERVIEW
+       HORIZONTAL SCROLL ARCHITECTURAL SHOWCASE SECTION
+       (Smooth Vertical-to-Horizontal Pinned Track)
        =================================================================== -->
-  <!-- ===================================================================
-       PINNED STEP-BY-STEP EDITORIAL STORYTELLING SECTION
-       =================================================================== -->
-  <section id="overview" class="hola-pinned-section">
-    <div class="hola-pinned-stage">
-
-      <!-- Stage Photos (Positioned Top-Left and Bottom-Right with smooth edge dissolve masks) -->
-      <!-- Photo 1 (Top Left) -->
-      <div class="hola-floating-media media-left media-photo-1" id="story-photo-1">
-        <div class="hola-img-wrapper" onclick="openServiceModal('3d-name-boards')">
-          <img src="assets/images/nexora-luxury-reception.jpg" alt="Studio 11 Cochin — Luxury Reception Branding"
-            class="hola-img" loading="lazy" />
-          <div class="hola-img-badge">Studio 11 Cochin · 3D Reception Identity</div>
+  <section id="overview" class="horizontal-showcase-section">
+    <div class="horizontal-pin-wrap">
+      
+      <!-- Top Section Header & Status Strip -->
+      <div class="horizontal-header-strip container">
+        <div class="horizontal-header-left">
+          <span class="eyebrow"><span class="pulse-dot"></span> Selected Architectural Stories</span>
+          <h2 class="horizontal-section-title">Design in Motion</h2>
         </div>
       </div>
 
-      <!-- Photo 2 (Bottom Right) -->
-      <div class="hola-floating-media media-right media-photo-2" id="story-photo-2">
-        <div class="hola-img-wrapper" onclick="openServiceModal('retail-branding')">
-          <img src="assets/images/nexora-luxury-boutique-showroom.jpg"
-            alt="Avalon Boutique — Luxury Retail Showroom Architecture" class="hola-img" loading="lazy" />
-          <div class="hola-img-badge">Avalon Boutique · Retail Interior Architecture</div>
-        </div>
-      </div>
+      <!-- Horizontal Moving Track -->
+      <div class="horizontal-track" id="horizontal-track">
+        
+        <!-- Story Panel 1 -->
+        <article class="horizontal-card" id="h-card-1">
+          <div class="h-card-inner">
+            <div class="h-card-content">
+              <span class="h-card-num">01 / 04</span>
+              <h3 class="h-card-title">Award-winning architectural signage and interior identity</h3>
+              <p class="h-card-desc">Engineered precision 3D letters with warm architectural backlight, defining premier corporate and reception presences across South India.</p>
+              <div class="h-card-meta">
+                <span class="h-card-tag">Studio 11 Cochin</span>
+                <span class="h-card-tag-sub">3D Reception Identity</span>
+              </div>
+            </div>
+            <div class="h-card-media" onclick="openServiceModal('3d-name-boards')">
+              <div class="h-media-box">
+                <img src="assets/images/nexora-luxury-reception.jpg" alt="Studio 11 Cochin — Luxury Reception Branding" class="h-media-img" loading="lazy" />
+                <div class="h-media-badge">Studio 11 Cochin · 3D Reception Identity</div>
+              </div>
+            </div>
+          </div>
+        </article>
 
-      <!-- Photo 3 (Top Left) -->
-      <div class="hola-floating-media media-left media-photo-3" id="story-photo-3">
-        <div class="hola-img-wrapper" onclick="openServiceModal('office-corporate-signage')">
-          <img src="assets/images/nexora-luxury-corporate-hq.jpg"
-            alt="Infopark Kochi — Executive Headquarters Lobby Wall" class="hola-img" loading="lazy" />
-          <div class="hola-img-badge">Infopark Kochi · Executive Headquarters Lobby</div>
-        </div>
-      </div>
+        <!-- Story Panel 2 -->
+        <article class="horizontal-card" id="h-card-2">
+          <div class="h-card-inner">
+            <div class="h-card-content">
+              <span class="h-card-num">02 / 04</span>
+              <h3 class="h-card-title">Precision craftsmanship in titanium, acrylic and light</h3>
+              <p class="h-card-desc">Bespoke retail showroom architecture featuring handcrafted acoustic timber slat panelling and concealed Samsung LED cove modules.</p>
+              <div class="h-card-meta">
+                <span class="h-card-tag">Avalon Boutique</span>
+                <span class="h-card-tag-sub">Retail Interior Architecture</span>
+              </div>
+            </div>
+            <div class="h-card-media" onclick="openServiceModal('retail-branding')">
+              <div class="h-media-box">
+                <img src="assets/images/nexora-luxury-boutique-showroom.jpg" alt="Avalon Boutique — Luxury Retail Showroom Architecture" class="h-media-img" loading="lazy" />
+                <div class="h-media-badge">Avalon Boutique · Retail Interior Architecture</div>
+              </div>
+            </div>
+          </div>
+        </article>
 
-      <!-- Photo 4 (Bottom Right) -->
-      <div class="hola-floating-media media-right media-photo-4" id="story-photo-4">
-        <div class="hola-img-wrapper" onclick="openServiceModal('shopfront-facade-graphics')">
-          <img src="assets/images/nexora-luxury-arcadia-facade.jpg"
-            alt="Arcadia Boutique — Illuminated Architectural Facade" class="hola-img" loading="lazy" />
-          <div class="hola-img-badge">Arcadia Boutique · Illuminated Architectural Facade</div>
-        </div>
-      </div>
+        <!-- Story Panel 3 -->
+        <article class="horizontal-card" id="h-card-3">
+          <div class="h-card-inner">
+            <div class="h-card-content">
+              <span class="h-card-num">03 / 04</span>
+              <h3 class="h-card-title">Elevating visionary commercial spaces across Kerala</h3>
+              <p class="h-card-desc">High-profile corporate headquarters branding engineered to withstand Kerala coastal climate with millimeter CNC laser precision.</p>
+              <div class="h-card-meta">
+                <span class="h-card-tag">Infopark Kochi</span>
+                <span class="h-card-tag-sub">Executive Headquarters Lobby</span>
+              </div>
+            </div>
+            <div class="h-card-media" onclick="openServiceModal('office-corporate-signage')">
+              <div class="h-media-box">
+                <img src="assets/images/nexora-luxury-corporate-hq.jpg" alt="Infopark Kochi — Executive Headquarters Lobby Wall" class="h-media-img" loading="lazy" />
+                <div class="h-media-badge">Infopark Kochi · Executive Headquarters Lobby</div>
+              </div>
+            </div>
+          </div>
+        </article>
 
-      <!-- Center Dynamic Writing Headlines (Simple & Elegant Editorial Phrasing) -->
-      <div class="container hola-overview-container">
-        <div class="hola-overview-content">
+        <!-- Story Panel 4 -->
+        <article class="horizontal-card" id="h-card-4">
+          <div class="h-card-inner">
+            <div class="h-card-content">
+              <span class="h-card-num">04 / 04</span>
+              <h3 class="h-card-title">We Brand. We Design. We Build Distinction.</h3>
+              <p class="h-card-desc">Illuminated structural facade graphics and bespoke storefront transformations that command attention day and night.</p>
+              <div class="h-card-meta">
+                <span class="h-card-tag">Arcadia Boutique</span>
+                <span class="h-card-tag-sub">Architectural Facade</span>
+              </div>
+            </div>
+            <div class="h-card-media" onclick="openServiceModal('shopfront-facade-graphics')">
+              <div class="h-media-box">
+                <img src="assets/images/nexora-luxury-arcadia-facade.jpg" alt="Arcadia Boutique — Illuminated Architectural Facade" class="h-media-img" loading="lazy" />
+                <div class="h-media-badge">Arcadia Boutique · Illuminated Facade</div>
+              </div>
+            </div>
+          </div>
+        </article>
 
-          <h2 class="hola-headline story-text story-text-1" id="story-text-1">
-            Award-winning architectural signage and interior identity
-          </h2>
-
-          <h2 class="hola-headline story-text story-text-2" id="story-text-2">
-            Precision craftsmanship in titanium, acrylic and light
-          </h2>
-
-          <h2 class="hola-headline story-text story-text-3" id="story-text-3">
-            Elevating visionary commercial spaces across Kerala
-          </h2>
-
-          <h2 class="hola-headline story-text story-text-4" id="story-text-4">
-            We Brand. We Design. We Build Distinction.
-          </h2>
-
-        </div>
       </div>
 
     </div>
