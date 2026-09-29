@@ -35,12 +35,12 @@ export function initHeroTimelapse() {
 
   // Keyframe image sources (6-Stage Architectural Transformation)
   const stageSources = [
-    'assets/images/arch-timelapse-0-shell.jpg',      // Stage 0: White shell (0.0s - 1.5s)
-    'assets/images/arch-timelapse-1-finishes.jpg',   // Stage 1: Wall finishes & herringbone floor (1.5s - 3.0s)
-    'assets/images/arch-timelapse-2-millwork.jpg',   // Stage 2: Fluted reception desk (3.0s - 4.5s)
-    'assets/images/arch-timelapse-3-signage.jpg',    // Stage 3: 3D Gold signage & chandelier (4.5s - 6.0s)
-    'assets/images/arch-timelapse-4-complete.jpg',   // Stage 4: Furnished luxury interior (6.0s - 7.5s)
-    'assets/images/arch-timelapse-5-evening.jpg'     // Stage 5: Twilight / Evening illumination (7.5s - 9.0s)
+    '/assets/images/arch-timelapse-0-shell.jpg',      // Stage 0: White shell (0.0s - 0.85s)
+    '/assets/images/arch-timelapse-1-finishes.jpg',   // Stage 1: Wall finishes & herringbone floor (0.85s - 1.70s)
+    '/assets/images/arch-timelapse-2-millwork.jpg',   // Stage 2: Fluted reception desk (1.70s - 2.55s)
+    '/assets/images/arch-timelapse-3-signage.jpg',    // Stage 3: 3D Gold signage & chandelier (2.55s - 3.40s)
+    '/assets/images/arch-timelapse-4-complete.jpg',   // Stage 4: Furnished luxury interior (3.40s - 4.25s)
+    '/assets/images/arch-timelapse-5-evening.jpg'     // Stage 5: Twilight / Evening illumination (4.25s - 5.00s)
   ];
 
   const images = [];
@@ -68,13 +68,28 @@ export function initHeroTimelapse() {
   // Preload all 6 keyframe images
   stageSources.forEach((src, idx) => {
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.src = src;
     img.onload = () => {
       loadedCount++;
-      if (loadedCount === stageSources.length) {
+      if (!isReady && loadedCount >= 1) {
         isReady = true;
         resizeCanvas();
         renderFrame(currentTime);
+      }
+      if (loadedCount === stageSources.length) {
+        startAnimationLoop();
+      }
+    };
+    img.onerror = () => {
+      console.warn(`Fallback for keyframe: ${src}`);
+      loadedCount++;
+      if (!isReady) {
+        isReady = true;
+        resizeCanvas();
+        renderFrame(currentTime);
+      }
+      if (loadedCount === stageSources.length) {
         startAnimationLoop();
       }
     };
@@ -155,12 +170,22 @@ export function initHeroTimelapse() {
       wipeProgress = 1.0;
     }
 
+    // Fallback to any loaded image if fromImg or toImg is not ready
+    const safeFromImg = (fromImg && fromImg.complete && fromImg.naturalWidth > 0) 
+      ? fromImg 
+      : images.find(img => img && img.complete && img.naturalWidth > 0);
+    const safeToImg = (toImg && toImg.complete && toImg.naturalWidth > 0) 
+      ? toImg 
+      : safeFromImg;
+
+    if (!safeFromImg) return;
+
     // 1. Draw base image (Full-fit cover)
     ctx.globalAlpha = 1.0;
-    ctx.drawImage(fromImg, offsetX, offsetY, renderW, renderH);
+    ctx.drawImage(safeFromImg, offsetX, offsetY, renderW, renderH);
 
     // 2. Draw target image with progressive architectural reveal
-    if (fromImg !== toImg && wipeProgress > 0) {
+    if (safeFromImg !== safeToImg && wipeProgress > 0) {
       ctx.save();
       // Smooth diagonal material wave wipe across room (bottom-left to top-right)
       const wipeAngle = Math.PI / 6; // 30 degrees
@@ -173,7 +198,7 @@ export function initHeroTimelapse() {
 
       // Crossfade + Soft directional wipe gradient
       ctx.globalAlpha = wipeProgress;
-      ctx.drawImage(toImg, offsetX, offsetY, renderW, renderH);
+      ctx.drawImage(safeToImg, offsetX, offsetY, renderW, renderH);
 
       // Add a subtle golden/warm architectural laser sweep line along the reveal front
       if (wipeProgress > 0.05 && wipeProgress < 0.95) {
