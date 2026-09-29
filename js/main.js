@@ -460,14 +460,22 @@ function initNavbar() {
   const navMenu = document.querySelector('.nav-menu');
   const navLinks = document.querySelectorAll('.nav-link');
 
+  let navTicking = false;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
+    if (!navTicking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        if (scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+        updateActiveNavLink(scrollY);
+        navTicking = false;
+      });
+      navTicking = true;
     }
-    updateActiveNavLink();
-  });
+  }, { passive: true });
 
   if (toggle && navMenu) {
     toggle.addEventListener('click', () => {
@@ -484,9 +492,9 @@ function initNavbar() {
   }
 }
 
-function updateActiveNavLink() {
+function updateActiveNavLink(scrollY) {
+  const effectiveY = (scrollY || window.scrollY || 0) + 180;
   const sections = document.querySelectorAll('section[id]');
-  const scrollY = window.scrollY + 180;
 
   sections.forEach(current => {
     const sectionHeight = current.offsetHeight;
@@ -495,7 +503,7 @@ function updateActiveNavLink() {
     const navLink = document.querySelector(`.nav-link[href*="${sectionId}"]`);
 
     if (navLink) {
-      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+      if (effectiveY >= sectionTop && effectiveY < sectionTop + sectionHeight) {
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         navLink.classList.add('active');
       }
@@ -1601,34 +1609,16 @@ function initScrollAnimations() {
 }
 
 /* ===================================================================
-   HOLA.DESIGN-STYLE SMOOTH SCROLL PARALLAX SYSTEM
-   Dual-layer: Staggered Multi-Column Motion + Internal Image Glides
+   SMOOTH, ZERO-LAG IMAGE PARALLAX SYSTEM (CACHED, 60FPS, NO COLUMN CLASH)
    =================================================================== */
 let updateParallaxItemsFn = null;
 
 function initImageScrollParallax() {
   let imageItems = [];
-  let columnItems = [];
   let observer = null;
 
   function refreshItems() {
-    // 1. Column Parallax
-    const columns = document.querySelectorAll('.portfolio-parallax-col');
-    columnItems = [];
-    columns.forEach((col, idx) => {
-      // Different column velocity rates for hola.design asymmetric flow
-      const rates = [-35, 45, -25];
-      const rate = rates[idx % 3] || -20;
-      columnItems.push({
-        el: col,
-        rate,
-        currentY: 0,
-        targetY: 0,
-        isVisible: true
-      });
-    });
-
-    // 2. Individual Photo Parallax
+    const isMobile = window.innerWidth <= 680;
     const containers = document.querySelectorAll(
       '.project-card, .insta-item, .founder-avatar-box, .service-card'
     );
@@ -1638,85 +1628,81 @@ function initImageScrollParallax() {
     }
 
     imageItems = [];
+    if (isMobile) {
+      // On mobile, reset transforms so cards remain perfectly rock-solid and responsive
+      containers.forEach(container => {
+        const img = container.querySelector(
+          '.project-card-img, .insta-img, .founder-portrait-img, .service-card-bg-img'
+        );
+        if (img) img.style.transform = '';
+      });
+      return;
+    }
+
+    const currentScrollY = window.scrollY || window.pageYOffset || 0;
+
     containers.forEach(container => {
       const img = container.querySelector(
         '.project-card-img, .insta-img, .founder-portrait-img, .service-card-bg-img'
       );
       if (!img) return;
 
-      const item = {
+      const rect = container.getBoundingClientRect();
+      const topDoc = rect.top + currentScrollY;
+      const height = rect.height || 400;
+
+      imageItems.push({
         container,
         img,
-        currentY: 0,
-        targetY: 0,
+        topDoc,
+        height,
         isVisible: true
-      };
-      imageItems.push(item);
+      });
     });
 
     if ('IntersectionObserver' in window) {
       observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          const foundImg = imageItems.find(item => item.container === entry.target);
-          if (foundImg) {
-            foundImg.isVisible = entry.isIntersecting;
-          }
-          const foundCol = columnItems.find(item => item.el === entry.target);
-          if (foundCol) {
-            foundCol.isVisible = entry.isIntersecting;
+          const found = imageItems.find(item => item.container === entry.target);
+          if (found) {
+            found.isVisible = entry.isIntersecting;
           }
         });
       }, {
-        rootMargin: '120px 0px 120px 0px',
+        rootMargin: '150px 0px 150px 0px',
         threshold: 0
       });
 
       imageItems.forEach(item => observer.observe(item.container));
-      columnItems.forEach(col => observer.observe(col.el));
     }
   }
 
   updateParallaxItemsFn = refreshItems;
   refreshItems();
 
-  function updateTargets() {
-    const windowH = window.innerHeight || 800;
-    const centerY = windowH / 2;
-
-    // Update columns
-    columnItems.forEach(col => {
-      if (!col.isVisible) return;
-      const rect = col.el.getBoundingClientRect();
-      const elementCenter = rect.top + rect.height / 2;
-      const progress = (elementCenter - centerY) / (windowH / 2);
-      const clamped = Math.max(-1, Math.min(1, progress));
-      col.targetY = Math.max(-8, Math.min(50, clamped * col.rate));
-    });
-
-    // Update individual images
-    imageItems.forEach(item => {
-      if (!item.isVisible) return;
-      const rect = item.container.getBoundingClientRect();
-      const elementCenter = rect.top + rect.height / 2;
-      const progress = (elementCenter - centerY) / (windowH / 2);
-      const clamped = Math.max(-1.4, Math.min(1.4, progress));
-      const maxShift = 32;
-      item.targetY = clamped * maxShift;
-    });
-  }
-
   let isTicking = false;
   function updateAndRender() {
-    updateTargets();
-    columnItems.forEach(col => {
-      if (!col.isVisible) return;
-      col.el.style.transform = `translate3d(0, ${col.targetY.toFixed(1)}px, 0)`;
-    });
+    if (imageItems.length === 0) {
+      isTicking = false;
+      return;
+    }
 
-    imageItems.forEach(item => {
-      if (!item.isVisible) return;
-      item.img.style.transform = `translate3d(0, ${-item.targetY.toFixed(1)}px, 0) scale(1.05)`;
-    });
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const windowH = window.innerHeight || 800;
+    const viewportCenter = scrollY + windowH / 2;
+
+    for (let i = 0; i < imageItems.length; i++) {
+      const item = imageItems[i];
+      if (!item.isVisible) continue;
+
+      const elementCenter = item.topDoc + item.height / 2;
+      const progress = (elementCenter - viewportCenter) / (windowH / 2);
+      const clamped = Math.max(-1.2, Math.min(1.2, progress));
+      const shift = clamped * 18; // Smooth, subtle 18px glide inside overflow:hidden
+
+      item.img.style.transform = `translate3d(0, ${-shift.toFixed(1)}px, 0) scale(1.06)`;
+    }
+
     isTicking = false;
   }
 
