@@ -1582,10 +1582,46 @@ function initScrollAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
     // Hero entrance
-    gsap.from('.hero-badge', { opacity: 0, y: -16, duration: 0.9, ease: 'power2.out', delay: 0.2 });
-    gsap.from('.hero-headline', { opacity: 0, y: 24, duration: 1, ease: 'power2.out', delay: 0.4 });
-    gsap.from('.hero-subheadline', { opacity: 0, y: 24, duration: 1, ease: 'power2.out', delay: 0.55 });
-    gsap.from('.hero-cta-group', { opacity: 0, y: 16, duration: 0.9, ease: 'power2.out', delay: 0.7 });
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+      // Mobile: Immediate entrance without any waiting/delay
+      gsap.from('.hero-badge', { opacity: 0, y: -16, duration: 0.9, ease: 'power2.out', delay: 0.2 });
+      gsap.from('.hero-headline', { opacity: 0, y: 24, duration: 1, ease: 'power2.out', delay: 0.4 });
+      gsap.from('.hero-subheadline', { opacity: 0, y: 24, duration: 1, ease: 'power2.out', delay: 0.55 });
+      gsap.from('.hero-cta-group', { opacity: 0, y: 16, duration: 0.9, ease: 'power2.out', delay: 0.7 });
+      gsap.from('.hero-stats-row', { opacity: 0, y: 16, duration: 0.9, ease: 'power2.out', delay: 0.85 });
+    } else {
+      // Desktop: Keep text hidden during architectural transformation, then reveal smoothly
+      const heroSelectors = ['.hero-badge', '.hero-headline', '.hero-subheadline', '.hero-cta-group', '.hero-stats-row'];
+      gsap.set(heroSelectors, { opacity: 0, y: 24 });
+
+      let heroRevealed = false;
+      const revealDesktopHero = () => {
+        if (heroRevealed) return;
+        heroRevealed = true;
+
+        const tl = gsap.timeline();
+        tl.to('.hero-badge', { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
+          .to('.hero-headline', { opacity: 1, y: 0, duration: 0.95, ease: 'power2.out' }, '-=0.55')
+          .to('.hero-subheadline', { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, '-=0.6')
+          .to('.hero-cta-group', { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out' }, '-=0.55')
+          .to('.hero-stats-row', { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out' }, '-=0.6');
+      };
+
+      // 1. Reveal when architectural timelapse finishes initial cycle
+      window.addEventListener('heroTimelapseComplete', revealDesktopHero, { once: true });
+
+      // 2. High-performance fallback: If user scrolls or clicks early, reveal instantly without delay
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) revealDesktopHero();
+      }, { passive: true, once: true });
+
+      window.addEventListener('click', revealDesktopHero, { once: true });
+
+      // 3. Network resilience fallback (maximum 3.6s wait)
+      setTimeout(revealDesktopHero, 3600);
+    }
 
     // Smooth section headers scroll reveal
     gsap.utils.toArray('.section-padding').forEach(section => {

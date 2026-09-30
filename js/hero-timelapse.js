@@ -47,22 +47,22 @@ export function initHeroTimelapse() {
   let loadedCount = 0;
   let isReady = false;
 
-  // Timelapse State (Calibrated 6.0-Second Cycle with clear stage holds so all 6 photos are distinctly visible)
-  const TOTAL_DURATION = 6.0;
+  // Timelapse State (Accelerated 3.6-Second Cycle for rapid, energetic architectural transformation)
+  const TOTAL_DURATION = 3.6;
   let currentTime = 0;
   let isPlaying = true;
   let isUserScrubbing = false;
   let lastTimestamp = null;
   let animFrameId = null;
 
-  // Stage description markers (6 Distinct Milestones across 6.0s)
+  // Stage description markers (6 Distinct Milestones across 3.6s)
   const STAGES = [
-    { start: 0.0, end: 1.0, name: '01 · Raw White Shell', desc: 'Raw architectural envelope & high-ceiling perimeter glazing' },
-    { start: 1.0, end: 2.0, name: '02 · Finishes & Slats', desc: 'Herringbone oak flooring & acoustic timber slat wall cladding' },
-    { start: 2.0, end: 3.0, name: '03 · Millwork Reception Desk', desc: 'Custom curved fluted marble & Calacatta counter installation' },
-    { start: 3.0, end: 4.0, name: '04 · 3D Gold NEXORA Signage', desc: 'Mirror-gold 3D dimensional lettering & brass chandelier assembly' },
-    { start: 4.0, end: 5.0, name: '05 · Luxury Furnished Showroom', desc: 'Bespoke bouclé curved sofa, travertine stone table & olive planter' },
-    { start: 5.0, end: 6.0, name: '06 · Evening Twilight & Halo LED', desc: 'Warm 3000K halo letter glow, amber lighting & evening city skyline' }
+    { start: 0.0, end: 0.6, name: '01 · Raw White Shell', desc: 'Raw architectural envelope & high-ceiling perimeter glazing' },
+    { start: 0.6, end: 1.2, name: '02 · Finishes & Slats', desc: 'Herringbone oak flooring & acoustic timber slat wall cladding' },
+    { start: 1.2, end: 1.8, name: '03 · Millwork Reception Desk', desc: 'Custom curved fluted marble & Calacatta counter installation' },
+    { start: 1.8, end: 2.4, name: '04 · 3D Gold NEXORA Signage', desc: 'Mirror-gold 3D dimensional lettering & brass chandelier assembly' },
+    { start: 2.4, end: 3.0, name: '05 · Luxury Furnished Showroom', desc: 'Bespoke bouclé curved sofa, travertine stone table & olive planter' },
+    { start: 3.0, end: 3.6, name: '06 · Evening Twilight & Halo LED', desc: 'Warm 3000K halo letter glow, amber lighting & evening city skyline' }
   ];
 
   // Preload all 6 keyframe images
@@ -128,51 +128,51 @@ export function initHeroTimelapse() {
     const offsetX = (w - renderW) / 2;
     const offsetY = (h - renderH) / 2;
 
-    // Determine current keyframe indices and transition factor across 6 stages (6.0s Total)
+    // Determine current keyframe indices and transition factor across 6 stages (3.6s Total)
     let fromImg, toImg, blendFactor;
     let wipeProgress = 0;
 
     const computeStageProgress = (tOffset) => {
-      // 0.0s - 0.25s: crisp hold on current image
-      // 0.25s - 0.85s: smooth diagonal architectural wipe (0.6s duration)
-      // 0.85s - 1.00s: hold on target image
-      if (tOffset < 0.25) {
+      // 0.0s - 0.12s: crisp hold on current image
+      // 0.12s - 0.50s: smooth diagonal architectural wipe (0.38s duration)
+      // 0.50s - 0.60s: hold on target image
+      if (tOffset < 0.12) {
         return 0;
-      } else if (tOffset < 0.85) {
-        const factor = (tOffset - 0.25) / 0.60;
+      } else if (tOffset < 0.50) {
+        const factor = (tOffset - 0.12) / 0.38;
         return easeInOutCubic(factor);
       } else {
         return 1;
       }
     };
 
-    if (timeSec < 1.0) {
-      // Stage 0 -> Stage 1: Raw Shell -> Finishes (0.0s - 1.0s)
+    if (timeSec < 0.6) {
+      // Stage 0 -> Stage 1: Raw Shell -> Finishes (0.0s - 0.6s)
       fromImg = images[0];
       toImg = images[1];
       wipeProgress = computeStageProgress(timeSec);
-    } else if (timeSec < 2.0) {
-      // Stage 1 -> Stage 2: Finishes -> Millwork Reception Desk (1.0s - 2.0s)
+    } else if (timeSec < 1.2) {
+      // Stage 1 -> Stage 2: Finishes -> Millwork Reception Desk (0.6s - 1.2s)
       fromImg = images[1];
       toImg = images[2];
-      wipeProgress = computeStageProgress(timeSec - 1.0);
-    } else if (timeSec < 3.0) {
-      // Stage 2 -> Stage 3: Millwork Desk -> 3D Gold NEXORA Signage & Chandelier (2.0s - 3.0s)
+      wipeProgress = computeStageProgress(timeSec - 0.6);
+    } else if (timeSec < 1.8) {
+      // Stage 2 -> Stage 3: Millwork Desk -> 3D Gold NEXORA Signage & Chandelier (1.2s - 1.8s)
       fromImg = images[2];
       toImg = images[3];
-      wipeProgress = computeStageProgress(timeSec - 2.0);
-    } else if (timeSec < 4.0) {
-      // Stage 3 -> Stage 4: Signage -> Complete Furnished Showroom (3.0s - 4.0s)
+      wipeProgress = computeStageProgress(timeSec - 1.2);
+    } else if (timeSec < 2.4) {
+      // Stage 3 -> Stage 4: Signage -> Complete Furnished Showroom (1.8s - 2.4s)
       fromImg = images[3];
       toImg = images[4];
-      wipeProgress = computeStageProgress(timeSec - 3.0);
-    } else if (timeSec < 5.0) {
-      // Stage 4 -> Stage 5: Daylight Showroom -> Evening Twilight & Halo Illumination (4.0s - 5.0s)
+      wipeProgress = computeStageProgress(timeSec - 1.8);
+    } else if (timeSec < 3.0) {
+      // Stage 4 -> Stage 5: Daylight Showroom -> Evening Twilight & Halo Illumination (2.4s - 3.0s)
       fromImg = images[4];
       toImg = images[5];
-      wipeProgress = computeStageProgress(timeSec - 4.0);
+      wipeProgress = computeStageProgress(timeSec - 2.4);
     } else {
-      // Stage 5 (Evening Atmosphere) Full Hold & Ambient Pulse (5.0s - 6.0s)
+      // Stage 5 (Evening Atmosphere) Full Hold & Ambient Pulse (3.0s - 3.6s)
       fromImg = images[5];
       toImg = images[5];
       wipeProgress = 1.0;
@@ -221,9 +221,9 @@ export function initHeroTimelapse() {
       ctx.restore();
     }
 
-    // 3. Subtle ambient glow pulse during completion & evening stage (5.0s - 6.0s)
-    if (timeSec >= 5.0) {
-      const pulse = Math.sin((timeSec - 5.0) * Math.PI) * 0.08;
+    // 3. Subtle ambient glow pulse during completion & evening stage (3.0s - 3.6s)
+    if (timeSec >= 3.0) {
+      const pulse = Math.sin((timeSec - 3.0) * (Math.PI / 0.6)) * 0.08;
       const glowGrad = ctx.createRadialGradient(w * 0.75, h * 0.38, 40, w * 0.75, h * 0.38, w * 0.55);
       glowGrad.addColorStop(0, `rgba(245, 158, 11, ${0.14 + pulse})`);
       glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
@@ -268,6 +268,8 @@ export function initHeroTimelapse() {
     }
   }
 
+  let hasDispatchedComplete = false;
+
   // Animation Loop using requestAnimationFrame with delta timing
   function startAnimationLoop() {
     lastTimestamp = performance.now();
@@ -279,6 +281,10 @@ export function initHeroTimelapse() {
 
       if (isPlaying && !isUserScrubbing) {
         currentTime += deltaSec;
+        if (currentTime >= 3.0 && !hasDispatchedComplete) {
+          hasDispatchedComplete = true;
+          window.dispatchEvent(new CustomEvent('heroTimelapseComplete'));
+        }
         if (currentTime >= TOTAL_DURATION) {
           currentTime = 0; // Seamless loop back to start
         }
